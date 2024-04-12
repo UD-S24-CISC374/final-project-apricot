@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import Collectables from "../objects/collectables";
 
 export default class titleScene extends Phaser.Scene {
     private start: Phaser.GameObjects.Rectangle;
@@ -6,6 +7,7 @@ export default class titleScene extends Phaser.Scene {
     private mute: Phaser.GameObjects.Image;
     private unmute: Phaser.GameObjects.Image;
     private music: Phaser.Sound.BaseSound;
+    private menu: Phaser.GameObjects.Image;
 
     constructor() {
         super({ key: "titleScene" });
@@ -15,7 +17,8 @@ export default class titleScene extends Phaser.Scene {
         this.load.image("bg", "assets/img/title_screen.png");
         this.load.image("mute", "assets/img/mute.png");
         this.load.image("unmute", "assets/img/unmute.png");
-        this.load.audio("music", "assets/audio/bg.mp3")
+        this.load.image("popup", "assets/img/popup.png");
+        this.load.audio("music", "assets/audio/bg.mp3");
     }
 
     create() {
@@ -37,7 +40,7 @@ export default class titleScene extends Phaser.Scene {
             .rectangle(850, 550, 400, 100, 0x0000)
             .setInteractive();
         this.collection.on("pointerup", () => {
-            console.log("collection");
+            new Collectables(this).generateMenu();
         });
         this.add.text(680, 530, "Collectables", {
             color: "white",
