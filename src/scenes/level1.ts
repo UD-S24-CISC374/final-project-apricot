@@ -1,7 +1,6 @@
 import Phaser from "phaser";
 
 export default class level1 extends Phaser.Scene {
-    private levelText: Phaser.GameObjects.Text;
     private monkeys: Array<string>;
     private monkey: Phaser.GameObjects.Image;
     private help: Phaser.GameObjects.Image;
@@ -44,8 +43,7 @@ export default class level1 extends Phaser.Scene {
         //background + header
         this.add.image(350, 360, "background");
         this.add.rectangle(640, 0, 1280, 150, 0x0000);
-
-        this.levelText = this.add.text(545, 10, "Level 1", {
+        this.add.text(545, 10, "Level 1", {
             fontSize: "48px",
         });
 
@@ -84,7 +82,7 @@ export default class level1 extends Phaser.Scene {
             color: "black",
         });
 
-        //monkeys
+        //default monkey
         this.monkey = this.add.image(350, 325, this.monkeys[0]);
 
         this.generatePopUp();
