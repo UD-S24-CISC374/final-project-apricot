@@ -44,8 +44,6 @@ export default class level1 extends Phaser.Scene {
         this.add.image(350, 360, "background");
         this.add.rectangle(640, 0, 1280, 150, 0x0000);
       
-        //const dropZoneColorBrown = this.add.dropZoneColorBrown(640, 0, 1280, 150).setRectangleDropZone(1280, 150);
-
         this.add.text(545, 10, "Level 1", {
             fontSize: "48px",
         });
@@ -73,15 +71,16 @@ export default class level1 extends Phaser.Scene {
         this.add.rectangle(1000, 650, 600, 450, 0x9999);
 
         this.add.image(350, 325, "monkey-brown-pirate");
+
         this.input.setDraggable(
             this.add
-                .text(720, 550, "HELLO", { fontSize: "42px" })
+                .text(720, 550, "brown", { fontSize: "42px" })
                 .setInteractive(),
             true
         );
         this.input.setDraggable(
             this.add
-                .text(720, 600, "HELLO2", { fontSize: "42px" })
+                .text(720, 600, "pirate hat", { fontSize: "42px" })
                 .setInteractive(),
             true
         );
@@ -103,7 +102,7 @@ export default class level1 extends Phaser.Scene {
         });
 
         //  A drop dropZoneColorBrown
-        const dropZoneColorBrown: Phaser.GameObjects.Zone = this.add
+        const dropZoneColor: Phaser.GameObjects.Zone = this.add
             .zone(950, 196, 150, 50)
             .setRectangleDropZone(150, 50)
             .setInteractive();
@@ -114,14 +113,14 @@ export default class level1 extends Phaser.Scene {
         //  Just a visual display of the dropZoneColorBrown
         const graphics = this.add.graphics();
         graphics.lineStyle(2, 0xffff00);
-        if (dropZoneColorBrown.input) {
+        if (dropZoneColor.input) {
             graphics.strokeRect(
-                dropZoneColorBrown.x -
-                    dropZoneColorBrown.input.hitArea.width / 2,
-                dropZoneColorBrown.y -
-                    dropZoneColorBrown.input.hitArea.height / 2,
-                dropZoneColorBrown.input.hitArea.width,
-                dropZoneColorBrown.input.hitArea.height
+                dropZoneColor.x -
+                    dropZoneColor.input.hitArea.width / 2,
+                dropZoneColor.y -
+                    dropZoneColor.input.hitArea.height / 2,
+                dropZoneColor.input.hitArea.width,
+                dropZoneColor.input.hitArea.height
             );
         }
 
@@ -197,7 +196,7 @@ export default class level1 extends Phaser.Scene {
                 gameObject.x = dropZone.x - 50;
                 gameObject.y = dropZone.y - 25;
 
-                if ((gameObject.text == "HELLO" && dropZone == dropZoneColorBrown) || (gameObject.text == "HELLO2" && dropZone == dropZoneHat)) {
+                if ((gameObject.text == "HELLO" && dropZone == dropZoneColor) || (gameObject.text == "HELLO2" && dropZone == dropZoneHat)) {
                     gameObject.setColor("green");
                     if (!flag){
                         flag = true;
@@ -215,7 +214,7 @@ export default class level1 extends Phaser.Scene {
         this.input.on(
             "dragend",
             (
-                pointer: any,
+                _pointer: any,
                 gameObject: Phaser.GameObjects.Text,
                 dropped: any
             ) => {
@@ -228,14 +227,14 @@ export default class level1 extends Phaser.Scene {
 
                 graphics.clear();
                 graphics.lineStyle(2, 0xffff00);
-                if (dropZoneColorBrown.input) {
+                if (dropZoneColor.input) {
                     graphics.strokeRect(
-                        dropZoneColorBrown.x -
-                            dropZoneColorBrown.input.hitArea.width / 2,
-                        dropZoneColorBrown.y -
-                            dropZoneColorBrown.input.hitArea.height / 2,
-                        dropZoneColorBrown.input.hitArea.width,
-                        dropZoneColorBrown.input.hitArea.height
+                        dropZoneColor.x -
+                            dropZoneColor.input.hitArea.width / 2,
+                        dropZoneColor.y -
+                            dropZoneColor.input.hitArea.height / 2,
+                        dropZoneColor.input.hitArea.width,
+                        dropZoneColor.input.hitArea.height
                     );
                 }
                 if (dropZoneHat.input) {
