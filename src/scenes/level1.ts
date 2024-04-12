@@ -3,6 +3,7 @@ import Phaser from "phaser";
 export default class level1 extends Phaser.Scene {
     private levelText: Phaser.GameObjects.Text;
     private monkeys: Array<string>;
+    private monkey: Phaser.GameObjects.Image;
     private help: Phaser.GameObjects.Image;
     private popup: Phaser.GameObjects.Image;
     private flag: boolean;
@@ -14,6 +15,11 @@ export default class level1 extends Phaser.Scene {
 
     constructor() {
         super({ key: "level1" });
+        this.monkeys = [
+            "monkey-brown-pirate",
+            "monkey-blue-hatless",
+            "monkey-yellow-party",
+        ];
     }
 
     preload() {
@@ -79,12 +85,7 @@ export default class level1 extends Phaser.Scene {
         });
 
         //monkeys
-        this.monkeys = [
-            "monkey-brown-pirate",
-            "monkey-blue-hatless",
-            "monkey-yellow-party",
-        ];
-        this.add.image(350, 325, this.monkeys[0]);
+        this.monkey = this.add.image(350, 325, this.monkeys[0]);
 
         this.generatePopUp();
     }
@@ -125,11 +126,13 @@ export default class level1 extends Phaser.Scene {
                 wordWrap: { width: 700, useAdvancedWrap: true },
             }
         );
-        this.destroy = this.add.text(575, 450, "CLOSE", {
-            fontSize: "16px",
-            color: "blue",
-            align: "center",
-        }).setInteractive();
+        this.destroy = this.add
+            .text(575, 450, "CLOSE", {
+                fontSize: "16px",
+                color: "blue",
+                align: "center",
+            })
+            .setInteractive();
 
         this.destroy.on("pointerover", () => {
             this.destroy.setColor("yellow");
@@ -149,6 +152,14 @@ export default class level1 extends Phaser.Scene {
             this.p2,
             this.destroy,
         ]);
+    }
+
+    changeMonkey() {
+        let index: number = this.monkeys.indexOf(this.monkey.texture.key) + 1;
+        if (index < 3){
+            this.monkey.destroy();
+            this.monkey = this.add.image(350, 325, this.monkeys[index]);
+        }
     }
 
     update() {}
