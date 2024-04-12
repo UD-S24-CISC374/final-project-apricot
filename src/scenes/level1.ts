@@ -71,19 +71,12 @@ export default class level1 extends Phaser.Scene {
         this.add.rectangle(1000, 650, 600, 450, 0x9999);
 
         this.add.image(350, 325, "brown-pirate");
-
-        this.input.setDraggable(
-            this.add
-                .text(720, 550, "brown", { fontSize: "42px" })
-                .setInteractive(),
-            true
-        );
-        this.input.setDraggable(
-            this.add
-                .text(720, 600, "pirate hat", { fontSize: "42px" })
-                .setInteractive(),
-            true
-        );
+        this.input.setDraggable(this.add.text(720, 500, "brown", { fontSize: "42px" }).setInteractive(),true);
+        this.input.setDraggable(this.add.text(1000, 500, "blue", { fontSize: "42px" }).setInteractive(),true);
+        this.input.setDraggable(this.add.text(720, 550, "pirate hat", { fontSize: "42px" }).setInteractive(),true);
+        this.input.setDraggable(this.add.text(1000, 550, "yellow", { fontSize: "42px" }).setInteractive(),true);
+        this.input.setDraggable(this.add.text(720, 600, "hatless", { fontSize: "42px" }).setInteractive(),true);
+        this.input.setDraggable(this.add.text(1000, 600, "party", { fontSize: "42px" }).setInteractive(),true);
 
         //default monkey
         this.monkey = this.add.image(350, 325, this.monkeys[0]);
