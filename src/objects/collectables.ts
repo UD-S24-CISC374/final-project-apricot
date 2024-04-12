@@ -18,7 +18,7 @@ export default class Collectables extends Phaser.GameObjects.Container {
 
         this.close = this.scene.add
             .text(575, 450, "CLOSE", {
-                fontSize: "16px",
+                fontSize: "32px",
                 color: "blue",
                 align: "center",
             })

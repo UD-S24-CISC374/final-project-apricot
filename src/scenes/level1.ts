@@ -11,14 +11,11 @@ export default class level1 extends Phaser.Scene {
     private p2: Phaser.GameObjects.Text;
     private destroy: Phaser.GameObjects.Text;
     private container: Phaser.GameObjects.Container;
+    private back: Phaser.GameObjects.Image;
 
     constructor() {
         super({ key: "level1" });
-        this.monkeys = [
-            "brown-pirate hat",
-            "blue-hatless",
-            "yellow-party hat",
-        ];
+        this.monkeys = ["brown-pirate hat", "blue-hatless", "yellow-party hat"];
     }
 
     preload() {
@@ -44,8 +41,7 @@ export default class level1 extends Phaser.Scene {
         //background + header
         this.add.image(350, 360, "background");
         this.add.rectangle(640, 0, 1280, 150, 0x0000);
-        this.add.image(130, 33, "back").scale = 0.3;
-      
+
         this.add.text(545, 10, "Level 1", {
             fontSize: "48px",
         });
@@ -68,21 +64,65 @@ export default class level1 extends Phaser.Scene {
             }
         });
 
+        //back button
+        this.back = this.add.image(130, 33, "back").setInteractive();
+        this.back.scale = 0.3;
+        this.back.setAlpha(0.7);
+
+        this.back.on("pointerover", () => {
+            this.back.setAlpha(1);
+        });
+        this.back.on("pointerout", () => {
+            this.back.setAlpha(0.7);
+        });
+        this.back.on("pointerup", () => {
+            this.scene.stop("level1").launch("titleScene");
+        });
+
         //side boxes
         this.add.rectangle(1000, 250, 600, 350, 0xffff);
         this.add.rectangle(1000, 650, 600, 450, 0x9999);
 
         this.add.image(350, 325, "brown-pirate");
-        this.input.setDraggable(this.add.text(720, 500, "brown", { fontSize: "42px" }).setInteractive(),true);
-        this.input.setDraggable(this.add.text(1000, 500, "blue", { fontSize: "42px" }).setInteractive(),true);
-        this.input.setDraggable(this.add.text(720, 550, "pirate hat", { fontSize: "42px" }).setInteractive(),true);
-        this.input.setDraggable(this.add.text(1000, 550, "yellow", { fontSize: "42px" }).setInteractive(),true);
-        this.input.setDraggable(this.add.text(720, 600, "hatless", { fontSize: "42px" }).setInteractive(),true);
-        this.input.setDraggable(this.add.text(1000, 600, "party", { fontSize: "42px" }).setInteractive(),true);
+        this.input.setDraggable(
+            this.add
+                .text(720, 500, "brown", { fontSize: "42px" })
+                .setInteractive(),
+            true
+        );
+        this.input.setDraggable(
+            this.add
+                .text(1000, 500, "blue", { fontSize: "42px" })
+                .setInteractive(),
+            true
+        );
+        this.input.setDraggable(
+            this.add
+                .text(720, 550, "pirate hat", { fontSize: "42px" })
+                .setInteractive(),
+            true
+        );
+        this.input.setDraggable(
+            this.add
+                .text(1000, 550, "yellow", { fontSize: "42px" })
+                .setInteractive(),
+            true
+        );
+        this.input.setDraggable(
+            this.add
+                .text(720, 600, "hatless", { fontSize: "42px" })
+                .setInteractive(),
+            true
+        );
+        this.input.setDraggable(
+            this.add
+                .text(1000, 600, "party hat", { fontSize: "42px" })
+                .setInteractive(),
+            true
+        );
 
         //default monkey
         this.monkey = this.add.image(350, 325, this.monkeys[0]);
-
 
         this.add.text(720, 100, "class Monkey:", {
             fontSize: "42px",
@@ -103,7 +143,7 @@ export default class level1 extends Phaser.Scene {
             .setRectangleDropZone(150, 50)
             .setInteractive();
         const dropZoneHat: Phaser.GameObjects.Zone = this.add
-            .zone(950, 246, 150, 50)
+            .zone(950, 270, 150, 50)
             .setRectangleDropZone(150, 50)
             .setInteractive();
 
@@ -111,10 +151,8 @@ export default class level1 extends Phaser.Scene {
         graphics.lineStyle(2, 0xffff00);
         if (dropZoneColor.input) {
             graphics.strokeRect(
-                dropZoneColor.x -
-                    dropZoneColor.input.hitArea.width / 2,
-                dropZoneColor.y -
-                    dropZoneColor.input.hitArea.height / 2,
+                dropZoneColor.x - dropZoneColor.input.hitArea.width / 2,
+                dropZoneColor.y - dropZoneColor.input.hitArea.height / 2,
                 dropZoneColor.input.hitArea.width,
                 dropZoneColor.input.hitArea.height
             );
@@ -198,8 +236,10 @@ export default class level1 extends Phaser.Scene {
                 let monkeyVals: Array<string> = this.getMonkeyVals();
 
                 if (
-                    (gameObject.text == monkeyVals[0] && dropZone == dropZoneColor) ||
-                    (gameObject.text == monkeyVals[1] && dropZone == dropZoneHat)
+                    (gameObject.text == monkeyVals[0] &&
+                        dropZone == dropZoneColor) ||
+                    (gameObject.text == monkeyVals[1] &&
+                        dropZone == dropZoneHat)
                 ) {
                     gameObject.setColor("green");
                     if (!flag) {
@@ -210,7 +250,18 @@ export default class level1 extends Phaser.Scene {
                             gameObject.destroy();
                             temp.destroy();
                             this.changeMonkey();
+                            flag = false;
                         }
+                    }
+                    graphics.clear();
+                    graphics.lineStyle(2, 0xffff00);
+                    if (dropZone.input) {
+                        graphics.strokeRect(
+                            dropZone.x - dropZone.input.hitArea.width / 2,
+                            dropZone.y - dropZone.input.hitArea.height / 2,
+                            dropZone.input.hitArea.width,
+                            dropZone.input.hitArea.height
+                        );
                     }
                 }
             }
@@ -283,7 +334,7 @@ export default class level1 extends Phaser.Scene {
         this.p2 = this.add.text(
             290,
             350,
-            "Fill in the blanks by dragging the correct descriptive word. If you make a mistake, click the reset button.",
+            "Fill in the blanks by dragging the correct descriptive word. If you make a mistake, click the back button to head back to the main menu and try again.",
             {
                 fontSize: "16px",
                 color: "black",
@@ -293,7 +344,7 @@ export default class level1 extends Phaser.Scene {
         );
         this.destroy = this.add
             .text(575, 450, "CLOSE", {
-                fontSize: "16px",
+                fontSize: "32px",
                 color: "blue",
                 align: "center",
             })
@@ -321,13 +372,63 @@ export default class level1 extends Phaser.Scene {
 
     changeMonkey() {
         let index: number = this.monkeys.indexOf(this.monkey.texture.key) + 1;
-        if (index < 3){
+        if (index < 3) {
             this.monkey.destroy();
             this.monkey = this.add.image(350, 325, this.monkeys[index]);
+        } else {
+            this.popup = this.add
+                .image(225, 125, "popup")
+                .setOrigin(0)
+                .setScale(1.25);
+            this.title = this.add.text(
+                290,
+                200,
+                "Congrats! You did it! Great job!",
+                {
+                    fontSize: "32px",
+                    color: "black",
+                }
+            );
+            this.p1 = this.add.text(
+                290,
+                275,
+                "The next level hasn't been implemented yet, so click NEXT to go back to the main menu.",
+                {
+                    fontSize: "16px",
+                    color: "black",
+                    align: "center",
+                    wordWrap: { width: 700, useAdvancedWrap: true },
+                }
+            );
+            this.destroy = this.add
+                .text(575, 450, "NEXT", {
+                    fontSize: "32px",
+                    color: "blue",
+                    align: "center",
+                })
+                .setInteractive();
+
+            this.destroy.on("pointerover", () => {
+                this.destroy.setColor("yellow");
+            });
+            this.destroy.on("pointeroff", () => {
+                this.destroy.setColor("blue");
+            });
+            this.destroy.on("pointerup", () => {
+                this.container.destroy();
+                this.scene.stop("level1").launch("titleScene");
+            });
+
+            this.container = this.add.container(0, 0, [
+                this.popup,
+                this.title,
+                this.p1,
+                this.destroy,
+            ]);
         }
     }
 
-    getMonkeyVals(){
+    getMonkeyVals() {
         let key: string = this.monkey.texture.key;
         return key.split("-");
     }
