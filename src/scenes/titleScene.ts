@@ -7,7 +7,6 @@ export default class titleScene extends Phaser.Scene {
     private mute: Phaser.GameObjects.Image;
     private unmute: Phaser.GameObjects.Image;
     private music: Phaser.Sound.BaseSound;
-    private menu: Phaser.GameObjects.Image;
 
     constructor() {
         super({ key: "titleScene" });

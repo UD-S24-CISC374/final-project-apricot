@@ -12,6 +12,7 @@ export default class level1 extends Phaser.Scene {
     private destroy: Phaser.GameObjects.Text;
     private container: Phaser.GameObjects.Container;
     private back: Phaser.GameObjects.Image;
+    private correct: Phaser.Sound.BaseSound;
 
     constructor() {
         super({ key: "level1" });
@@ -35,6 +36,7 @@ export default class level1 extends Phaser.Scene {
         );
         this.load.image("help", "assets/img/help-64.png");
         this.load.image("popup", "assets/img/popup.png");
+        this.load.audio("correct", "assets/audio/correct-choice.mp3");
     }
 
     create() {
@@ -45,6 +47,8 @@ export default class level1 extends Phaser.Scene {
         this.add.text(545, 10, "Level 1", {
             fontSize: "48px",
         });
+        
+        this.correct = this.sound.add("correct", { loop: false });
 
         //help button
         this.help = this.add.image(50, 35, "help").setInteractive();
@@ -242,6 +246,7 @@ export default class level1 extends Phaser.Scene {
                         dropZone == dropZoneHat)
                 ) {
                     gameObject.setColor("green");
+                    this.correct.play();
                     if (!flag) {
                         flag = true;
                         temp = gameObject;
@@ -334,7 +339,7 @@ export default class level1 extends Phaser.Scene {
         this.p2 = this.add.text(
             290,
             350,
-            "Fill in the blanks by dragging the correct descriptive word. If you make a mistake, click the back button to head back to the main menu and try again.",
+            "Fill in the blanks by dragging the correct descriptive word. If you make a mistake, click the back button to return to the main menu and try again.",
             {
                 fontSize: "16px",
                 color: "black",
