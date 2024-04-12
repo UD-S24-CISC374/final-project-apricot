@@ -23,6 +23,7 @@ export default class level1 extends Phaser.Scene {
 
     preload() {
         this.load.image("background", "assets/img/background.png");
+        this.load.image("back", "assets/img/back-button.png");
         this.load.image(
             "brown-pirate hat",
             "assets/img/monkeys/monkey-brown-pirate.png"
@@ -43,6 +44,7 @@ export default class level1 extends Phaser.Scene {
         //background + header
         this.add.image(350, 360, "background");
         this.add.rectangle(640, 0, 1280, 150, 0x0000);
+        this.add.image(130, 33, "back").scale = 0.3;
       
         this.add.text(545, 10, "Level 1", {
             fontSize: "48px",
