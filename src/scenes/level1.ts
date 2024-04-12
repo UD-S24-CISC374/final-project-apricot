@@ -15,24 +15,24 @@ export default class level1 extends Phaser.Scene {
     constructor() {
         super({ key: "level1" });
         this.monkeys = [
-            "monkey-brown-pirate",
-            "monkey-blue-hatless",
-            "monkey-yellow-party",
+            "brown-pirate hat",
+            "blue-hatless",
+            "yellow-party hat",
         ];
     }
 
     preload() {
         this.load.image("background", "assets/img/background.png");
         this.load.image(
-            "monkey-brown-pirate",
+            "brown-pirate hat",
             "assets/img/monkeys/monkey-brown-pirate.png"
         );
         this.load.image(
-            "monkey-blue-hatless",
+            "blue-hatless",
             "assets/img/monkeys/monkey-blue-hatless.png"
         );
         this.load.image(
-            "monkey-yellow-party",
+            "yellow-party hat",
             "assets/img/monkeys/monkey-yellow-party.png"
         );
         this.load.image("help", "assets/img/help-64.png");
@@ -70,7 +70,7 @@ export default class level1 extends Phaser.Scene {
         this.add.rectangle(1000, 250, 600, 350, 0xffff);
         this.add.rectangle(1000, 650, 600, 450, 0x9999);
 
-        this.add.image(350, 325, "monkey-brown-pirate");
+        this.add.image(350, 325, "brown-pirate");
 
         this.input.setDraggable(
             this.add
@@ -84,8 +84,9 @@ export default class level1 extends Phaser.Scene {
                 .setInteractive(),
             true
         );
-        let flag: boolean = false;
-        let temp: Phaser.GameObjects.Text | null = null;
+
+        //default monkey
+        this.monkey = this.add.image(350, 325, this.monkeys[0]);
 
 
         this.add.text(720, 100, "class Monkey:", {
@@ -101,7 +102,7 @@ export default class level1 extends Phaser.Scene {
             color: "black",
         });
 
-        //  A drop dropZoneColorBrown
+        //drop zones
         const dropZoneColor: Phaser.GameObjects.Zone = this.add
             .zone(950, 196, 150, 50)
             .setRectangleDropZone(150, 50)
@@ -110,7 +111,7 @@ export default class level1 extends Phaser.Scene {
             .zone(950, 246, 150, 50)
             .setRectangleDropZone(150, 50)
             .setInteractive();
-        //  Just a visual display of the dropZoneColorBrown
+
         const graphics = this.add.graphics();
         graphics.lineStyle(2, 0xffff00);
         if (dropZoneColor.input) {
@@ -123,7 +124,6 @@ export default class level1 extends Phaser.Scene {
                 dropZoneColor.input.hitArea.height
             );
         }
-
         if (dropZoneHat.input) {
             graphics.strokeRect(
                 dropZoneHat.x - dropZoneHat.input.hitArea.width / 2,
@@ -133,13 +133,17 @@ export default class level1 extends Phaser.Scene {
             );
         }
 
+        let flag: boolean = false;
+        let temp: Phaser.GameObjects.Text | null = null;
+
+        //drag and drop
         this.input.on(
             "drag",
             (
-                pointer: any,
-                gameObject: { x: any; y: any },
-                dragX: any,
-                dragY: any
+                pointer: Phaser.Input.Pointer,
+                gameObject: { x: number; y: number },
+                dragX: number,
+                dragY: number
             ) => {
                 gameObject.x = dragX;
                 gameObject.y = dragY;
@@ -149,7 +153,7 @@ export default class level1 extends Phaser.Scene {
         this.input.on(
             "dragenter",
             (
-                pointer: any,
+                pointer: Phaser.Input.Pointer,
                 gameObject: Phaser.GameObjects.Text,
                 dropZone: Phaser.GameObjects.Zone
             ) => {
@@ -169,7 +173,7 @@ export default class level1 extends Phaser.Scene {
         this.input.on(
             "dragleave",
             (
-                pointer: any,
+                pointer: Phaser.Input.Pointer,
                 gameObject: Phaser.GameObjects.Text,
                 dropZone: Phaser.GameObjects.Zone
             ) => {
@@ -189,22 +193,28 @@ export default class level1 extends Phaser.Scene {
         this.input.on(
             "drop",
             (
-                _pointer: any,
+                _pointer: Phaser.Input.Pointer,
                 gameObject: Phaser.GameObjects.Text,
                 dropZone: Phaser.GameObjects.Zone
             ) => {
                 gameObject.x = dropZone.x - 50;
                 gameObject.y = dropZone.y - 25;
 
-                if ((gameObject.text == "HELLO" && dropZone == dropZoneColor) || (gameObject.text == "HELLO2" && dropZone == dropZoneHat)) {
+                let monkeyVals: Array<string> = this.getMonkeyVals();
+
+                if (
+                    (gameObject.text == monkeyVals[0] && dropZone == dropZoneColor) ||
+                    (gameObject.text == monkeyVals[1] && dropZone == dropZoneHat)
+                ) {
                     gameObject.setColor("green");
-                    if (!flag){
+                    if (!flag) {
                         flag = true;
                         temp = gameObject;
                     } else {
-                        if(gameObject.input && temp){
+                        if (gameObject.input && temp) {
                             gameObject.destroy();
                             temp.destroy();
+                            this.changeMonkey();
                         }
                     }
                 }
@@ -214,9 +224,9 @@ export default class level1 extends Phaser.Scene {
         this.input.on(
             "dragend",
             (
-                _pointer: any,
+                _pointer: Phaser.Input.Pointer,
                 gameObject: Phaser.GameObjects.Text,
-                dropped: any
+                dropped: boolean
             ) => {
                 if (!dropped) {
                     if (gameObject.input) {
@@ -229,8 +239,7 @@ export default class level1 extends Phaser.Scene {
                 graphics.lineStyle(2, 0xffff00);
                 if (dropZoneColor.input) {
                     graphics.strokeRect(
-                        dropZoneColor.x -
-                            dropZoneColor.input.hitArea.width / 2,
+                        dropZoneColor.x - dropZoneColor.input.hitArea.width / 2,
                         dropZoneColor.y -
                             dropZoneColor.input.hitArea.height / 2,
                         dropZoneColor.input.hitArea.width,
@@ -247,9 +256,6 @@ export default class level1 extends Phaser.Scene {
                 }
             }
         );
-
-        //default monkey
-        this.monkey = this.add.image(350, 325, this.monkeys[0]);
 
         this.generatePopUp();
     }
@@ -324,6 +330,11 @@ export default class level1 extends Phaser.Scene {
             this.monkey.destroy();
             this.monkey = this.add.image(350, 325, this.monkeys[index]);
         }
+    }
+
+    getMonkeyVals(){
+        let key: string = this.monkey.texture.key;
+        return key.split("-");
     }
 
     update() {}
