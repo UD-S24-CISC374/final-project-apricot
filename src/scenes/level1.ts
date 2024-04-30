@@ -44,7 +44,7 @@ export default class level1 extends Phaser.Scene {
         this.add.image(350, 360, "background");
         this.add.rectangle(640, 0, 1280, 150, 0x0000);
 
-        this.add.text(545, 10, "Level 1", {
+        this.add.text(545, 10, "Level 1x", {
             fontSize: "48px",
         });
         
@@ -397,7 +397,7 @@ export default class level1 extends Phaser.Scene {
             this.p1 = this.add.text(
                 290,
                 275,
-                "The next level hasn't been implemented yet, so click NEXT to go back to the main menu.",
+                "The next level hasn't been implemented yet, so click NEXT to go to level 2.",
                 {
                     fontSize: "16px",
                     color: "black",
@@ -421,7 +421,7 @@ export default class level1 extends Phaser.Scene {
             });
             this.destroy.on("pointerup", () => {
                 this.container.destroy();
-                this.scene.stop("level1").launch("titleScene");
+                this.scene.stop("level1").launch("level2");
             });
 
             this.container = this.add.container(0, 0, [

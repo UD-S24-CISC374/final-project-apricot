@@ -128,26 +128,38 @@ export default class level2 extends Phaser.Scene {
         //default monkey
         this.monkey = this.add.image(350, 325, this.monkeys[0]);
 
-        this.add.text(720, 100, "class Monkey:", {
-            fontSize: "42px",
+        this.add.text(720, 100, "if(monkey.color == 'brown'){", {
+            fontSize: "24px",
             color: "black",
         });
-        this.add.text(750, 175, "color:", {
-            fontSize: "32px",
+        this.add.text(770, 150, "this.hat = ", {
+            fontSize: "24px",
             color: "black",
         });
-        this.add.text(750, 250, "hat:", {
-            fontSize: "32px",
+        this.add.text(725, 190, "}", {
+            fontSize: "24px",
+            color: "black",
+        });
+        this.add.text(720, 230, "else if(monkey.hat == 'party hat'){", {
+            fontSize: "24px",
+            color: "black",
+        });
+        this.add.text(770, 280, "this.color = ", {
+            fontSize: "24px",
+            color: "black",
+        });
+        this.add.text(725, 320, "}", {
+            fontSize: "16px",
             color: "black",
         });
 
         //drop zones
         const dropZoneColor: Phaser.GameObjects.Zone = this.add
-            .zone(950, 196, 150, 50)
+            .zone(1010, 165, 150, 50)
             .setRectangleDropZone(150, 50)
             .setInteractive();
         const dropZoneHat: Phaser.GameObjects.Zone = this.add
-            .zone(950, 270, 150, 50)
+            .zone(1010, 290, 150, 50)
             .setRectangleDropZone(150, 50)
             .setInteractive();
 
@@ -247,17 +259,8 @@ export default class level2 extends Phaser.Scene {
                 ) {
                     gameObject.setColor("green");
                     this.correct.play();
-                    if (!flag) {
-                        flag = true;
-                        temp = gameObject;
-                    } else {
-                        if (gameObject.input && temp) {
-                            gameObject.destroy();
-                            temp.destroy();
-                            this.changeMonkey();
-                            flag = false;
-                        }
-                    }
+                    gameObject.destroy();
+                    this.changeMonkey();
                     graphics.clear();
                     graphics.lineStyle(2, 0xffff00);
                     if (dropZone.input) {
@@ -319,7 +322,7 @@ export default class level2 extends Phaser.Scene {
         this.title = this.add.text(
             290,
             200,
-            "Welcome to Level 1 of Jungle Quest!",
+            "Welcome to Level 2 of Jungle Quest!",
             {
                 fontSize: "32px",
                 color: "black",
@@ -328,7 +331,7 @@ export default class level2 extends Phaser.Scene {
         this.p1 = this.add.text(
             290,
             275,
-            "In this level, we want to fill in the Monkey class's field values based on the appearance of the monkey on the left of the screen.",
+            "In this level, we'll be working with conditionals. You'll be given a monkey and depending on the condition, you'll need to drag the correct descriptive word to the correct drop zone.",
             {
                 fontSize: "16px",
                 color: "black",
@@ -339,7 +342,7 @@ export default class level2 extends Phaser.Scene {
         this.p2 = this.add.text(
             290,
             350,
-            "Fill in the blanks by dragging the correct descriptive word. If you make a mistake, click the back button to return to the main menu and try again.",
+            "The keyword 'this' refers to the object referenced, so for us that is the monkey on the screen",
             {
                 fontSize: "16px",
                 color: "black",
@@ -397,7 +400,7 @@ export default class level2 extends Phaser.Scene {
             this.p1 = this.add.text(
                 290,
                 275,
-                "The next level hasn't been implemented yet, so click NEXT to go to Level2.",
+                "The next level hasn't been implemented yet, so click NEXT to go to the title page.",
                 {
                     fontSize: "16px",
                     color: "black",
@@ -421,7 +424,7 @@ export default class level2 extends Phaser.Scene {
             });
             this.destroy.on("pointerup", () => {
                 this.container.destroy();
-                this.scene.stop("level1").launch("level2");
+                this.scene.stop("level2").launch("titleScene");
             });
 
             this.container = this.add.container(0, 0, [
