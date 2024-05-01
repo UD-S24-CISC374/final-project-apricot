@@ -16,6 +16,8 @@ export default class level2 extends Phaser.Scene {
     private index : number;
     private isHat: boolean;
     private options: Array<Phaser.GameObjects.Text>;
+    private elseStatement: Phaser.GameObjects.Text;
+    private elseIfStatement: Phaser.GameObjects.Text;
 
     constructor() {
         super({ key: "level2" });
@@ -131,7 +133,7 @@ export default class level2 extends Phaser.Scene {
             fontSize: "24px",
             color: "black",
         });
-        let elseIfStatement = this.add.text(720, 230, "else if(monkey.color == 'blue'){", {
+        this.elseIfStatement = this.add.text(720, 230, "else if(monkey.color == 'blue'){", {
             fontSize: "24px",
             color: "black",
         });
@@ -143,7 +145,7 @@ export default class level2 extends Phaser.Scene {
             fontSize: "24px",
             color: "black",
         });
-        let elseStatement = this.add.text(720, 360, "else{", {
+        this.elseStatement = this.add.text(720, 360, "else{", {
             fontSize: "24px",
             color: "black",
         }).setVisible(false);
@@ -449,6 +451,11 @@ export default class level2 extends Phaser.Scene {
 
     getMonkeyVals() {
         return ["brown", "hatless"];
+    }
+
+    changeElseIf(elseStatement: Phaser.GameObjects.Text, elseIfStatement: Phaser.GameObjects.Text) {
+        elseStatement.setVisible(true);
+        elseIfStatement.setVisible(false);
     }
 
     update() {}
