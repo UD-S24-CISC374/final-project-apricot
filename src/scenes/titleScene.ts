@@ -30,7 +30,7 @@ export default class titleScene extends Phaser.Scene {
             .rectangle(500, 550, 200, 100, 0x0000)
             .setInteractive();
         this.start.on("pointerup", () => {
-            this.scene.stop("titleScene").launch("level2");
+            this.scene.stop("titleScene").launch("level1");
         });
         this.add.text(425, 530, "Start", { color: "white", fontSize: "48px" });
 
