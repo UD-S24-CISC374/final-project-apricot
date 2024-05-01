@@ -26,7 +26,7 @@ export default class Collectables extends Phaser.GameObjects.Container {
             .setOrigin(0)
             .setScale(1.25);
 
-        this.fact = this.scene.add.text(300, 450, "", {
+        this.fact = this.scene.add.text(300, 450, "Click on any of your collectables to hear a fun fact! If you don't have any collectables, try interacting with animals and objects in the game levels.", {
             fontSize: "16px",
             color: "black",
             align: "center",
