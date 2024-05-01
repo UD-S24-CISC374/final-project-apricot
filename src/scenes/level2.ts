@@ -13,10 +13,16 @@ export default class level2 extends Phaser.Scene {
     private container: Phaser.GameObjects.Container;
     private back: Phaser.GameObjects.Image;
     private correct: Phaser.Sound.BaseSound;
+    private index : number;
+    private isHat: boolean;
+    private options: Array<Phaser.GameObjects.Text>;
 
     constructor() {
         super({ key: "level2" });
         this.monkeys = ["brown-pirate hat", "blue-hatless", "yellow-party hat"];
+        this.index = 0;
+        this.isHat = false;
+        this.options = [];
     }
 
     preload() {
@@ -88,79 +94,64 @@ export default class level2 extends Phaser.Scene {
         this.add.rectangle(1000, 650, 600, 450, 0x9999);
 
         this.add.image(350, 325, "brown-pirate");
-        this.input.setDraggable(
-            this.add
-                .text(720, 500, "brown", { fontSize: "42px" })
-                .setInteractive(),
-            true
-        );
-        this.input.setDraggable(
-            this.add
-                .text(1000, 500, "blue", { fontSize: "42px" })
-                .setInteractive(),
-            true
-        );
-        this.input.setDraggable(
-            this.add
-                .text(720, 550, "pirate hat", { fontSize: "42px" })
-                .setInteractive(),
-            true
-        );
-        this.input.setDraggable(
-            this.add
-                .text(1000, 550, "yellow", { fontSize: "42px" })
-                .setInteractive(),
-            true
-        );
-        this.input.setDraggable(
-            this.add
-                .text(720, 600, "hatless", { fontSize: "42px" })
-                .setInteractive(),
-            true
-        );
-        this.input.setDraggable(
-            this.add
-                .text(1000, 600, "party hat", { fontSize: "42px" })
-                .setInteractive(),
-            true
-        );
+        const origin: Record<string, { x: number; y: number }> = {
+            "brown": { x: 720, y: 500 },
+            "blue": { x: 1000, y: 500 },
+            "pirate hat": { x: 720, y: 550 },
+            "yellow": { x: 1000, y: 550 },
+            "hatless": { x: 720, y: 600 },
+            "party hat": { x: 1000, y: 600 }
+        };
+        let brown = this.add.text(720, 500, "brown", { fontSize: "42px" }).setInteractive();
+        let pirateHat = this.add.text(720, 550, "pirate hat", { fontSize: "42px" }).setInteractive();
+        let blue = this.add.text(1000, 500, "blue", { fontSize: "42px" }).setInteractive();
+        let yellow = this.add.text(1000, 550, "yellow", { fontSize: "42px" }).setInteractive();
+        let hatless = this.add.text(720, 600, "hatless", { fontSize: "42px" }).setInteractive();
+        let partyHat = this.add.text(1000, 600, "party hat", { fontSize: "42px" }).setInteractive();
+        this.options = [brown, blue, pirateHat, yellow, hatless, partyHat];
+        this.input.setDraggable(brown,true);
+        this.input.setDraggable(blue,true);
+        this.input.setDraggable(pirateHat,true);
+        this.input.setDraggable(yellow,true);
+        this.input.setDraggable(hatless,true);
+        this.input.setDraggable(partyHat,true);
 
         //default monkey
         this.monkey = this.add.image(350, 325, this.monkeys[0]);
 
-        this.add.text(720, 100, "if(monkey.color == 'brown'){", {
+        this.add.text(720, 100, "if(monkey.hat == 'pirate hat'){", {
             fontSize: "24px",
             color: "black",
         });
-        this.add.text(770, 150, "this.hat = ", {
-            fontSize: "24px",
+        let ifStatement = this.add.text(770, 150, "this.color = ", {
+            fontSize: "22px",
             color: "black",
         });
         this.add.text(725, 190, "}", {
             fontSize: "24px",
             color: "black",
         });
-        this.add.text(720, 230, "else if(monkey.hat == 'party hat'){", {
+        let elseIfStatement = this.add.text(720, 230, "else if(monkey.color == 'blue'){", {
             fontSize: "24px",
             color: "black",
         });
-        this.add.text(770, 280, "this.color = ", {
+        this.add.text(770, 280, "this.hat = ", {
             fontSize: "24px",
             color: "black",
         });
         this.add.text(725, 320, "}", {
-            fontSize: "16px",
+            fontSize: "24px",
             color: "black",
         });
 
         //drop zones
         const dropZoneColor: Phaser.GameObjects.Zone = this.add
             .zone(1010, 165, 150, 50)
-            .setRectangleDropZone(150, 50)
+            .setRectangleDropZone(250, 50)
             .setInteractive();
         const dropZoneHat: Phaser.GameObjects.Zone = this.add
             .zone(1010, 290, 150, 50)
-            .setRectangleDropZone(150, 50)
+            .setRectangleDropZone(250, 50)
             .setInteractive();
 
         const graphics = this.add.graphics();
@@ -181,9 +172,6 @@ export default class level2 extends Phaser.Scene {
                 dropZoneHat.input.hitArea.height
             );
         }
-
-        let flag: boolean = false;
-        let temp: Phaser.GameObjects.Text | null = null;
 
         //drag and drop
         this.input.on(
@@ -252,15 +240,20 @@ export default class level2 extends Phaser.Scene {
                 let monkeyVals: Array<string> = this.getMonkeyVals();
 
                 if (
-                    (gameObject.text == monkeyVals[0] &&
-                        dropZone == dropZoneColor) ||
-                    (gameObject.text == monkeyVals[1] &&
-                        dropZone == dropZoneHat)
+                    (gameObject.text == monkeyVals[this.index] && dropZone == dropZoneColor && !this.isHat) ||
+                    (gameObject.text == monkeyVals[this.index] && dropZone == dropZoneHat && this.isHat)
                 ) {
                     gameObject.setColor("green");
                     this.correct.play();
+                    this.options.map((option) => {
+                        option.setColor("white");
+                    });
+                    console.log("this:" + this);
+                    
+                    console.log("HELLO");
+                    this.changeMonkey(gameObject);
                     gameObject.destroy();
-                    this.changeMonkey();
+                    
                     graphics.clear();
                     graphics.lineStyle(2, 0xffff00);
                     if (dropZone.input) {
@@ -271,6 +264,12 @@ export default class level2 extends Phaser.Scene {
                             dropZone.input.hitArea.height
                         );
                     }
+                }
+                else{
+                    gameObject.setColor("red");
+                    gameObject.x = origin[gameObject.text as keyof typeof origin].x;
+                    gameObject.y = origin[gameObject.text as keyof typeof origin].y;
+                
                 }
             }
         );
@@ -378,11 +377,19 @@ export default class level2 extends Phaser.Scene {
         ]);
     }
 
-    changeMonkey() {
-        let index: number = this.monkeys.indexOf(this.monkey.texture.key) + 1;
-        if (index < 3) {
+    changeMonkey(old: Phaser.GameObjects.Text) {
+        if (this.index < 6) {
             this.monkey.destroy();
-            this.monkey = this.add.image(350, 325, this.monkeys[index]);
+            this.isHat = !this.isHat;
+            this.index++;
+            let temp: Array<Phaser.GameObjects.Text> = [];
+            this.options.map((option) => {
+                option != old ? temp.push(option) : null;
+            });
+            this.options = temp;
+            //console.log(this.index);
+            //console.log(this.monkeys[this.index]);
+            this.monkey = this.add.image(350, 325, this.monkeys[this.index]);
         } else {
             this.popup = this.add
                 .image(225, 125, "popup")
@@ -437,8 +444,7 @@ export default class level2 extends Phaser.Scene {
     }
 
     getMonkeyVals() {
-        let key: string = this.monkey.texture.key;
-        return key.split("-");
+        return ["brown", "hatless"];
     }
 
     update() {}
