@@ -13,6 +13,8 @@ export default class level1 extends Phaser.Scene {
     private container: Phaser.GameObjects.Container;
     private back: Phaser.GameObjects.Image;
     private correct: Phaser.Sound.BaseSound;
+    private rock: Phaser.GameObjects.Image;
+    private parrot: Phaser.GameObjects.Image;
 
     constructor() {
         super({ key: "level1" });
@@ -39,7 +41,7 @@ export default class level1 extends Phaser.Scene {
         this.load.audio("correct", "assets/audio/correct-choice.mp3");
     }
 
-    create() {
+    create(collectables: Record<string, boolean>) {
         //background + header
         this.add.image(350, 360, "background");
         this.add.rectangle(640, 0, 1280, 150, 0x0000);
@@ -80,7 +82,8 @@ export default class level1 extends Phaser.Scene {
             this.back.setAlpha(0.7);
         });
         this.back.on("pointerup", () => {
-            this.scene.stop("level1").launch("titleScene");
+            console.log(collectables)
+            this.scene.stop("level1").resume("titleScene", collectables);
         });
 
         //side boxes
@@ -307,6 +310,53 @@ export default class level1 extends Phaser.Scene {
                 }
             }
         );
+
+        //collectables
+        if (
+            !collectables["rock" as keyof typeof collectables] &&
+            !collectables["parrot" as keyof typeof collectables]
+        ) {
+            this.rock = this.add
+                .image(622, 649, "rock")
+                .setScale(0.4)
+                .setInteractive()
+                .on("pointerup", () => {
+                    collectables["rock" as keyof typeof collectables] = true;
+                    this.rock.destroy();
+                });
+            this.parrot = this.add
+                .image(155, 140, "parrot")
+                .setScale(0.7)
+                .setInteractive()
+                .on("pointerup", () => {
+                    collectables["parrot" as keyof typeof collectables] = true;
+                    this.parrot.destroy();
+                });
+        } else if (
+            collectables["rock" as keyof typeof collectables] &&
+            !collectables["parrot" as keyof typeof collectables]
+        ) {
+            this.parrot = this.add
+                .image(200, 250, "parrot")
+                .setScale(0.7)
+                .setInteractive()
+                .on("pointerup", () => {
+                    collectables["parrot" as keyof typeof collectables] = true;
+                    this.parrot.destroy();
+                });
+        } else if (
+            !collectables["rock" as keyof typeof collectables] &&
+            collectables["parrot" as keyof typeof collectables]
+        ) {
+            this.rock = this.add
+                .image(300, 400, "rock")
+                .setScale(0.4)
+                .setInteractive()
+                .on("pointerup", () => {
+                    collectables["rock" as keyof typeof collectables] = true;
+                    this.rock.destroy();
+                });
+        }
 
         this.generatePopUp();
     }

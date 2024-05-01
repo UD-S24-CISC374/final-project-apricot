@@ -17,6 +17,8 @@ export default class titleScene extends Phaser.Scene {
         this.load.image("mute", "assets/img/mute.png");
         this.load.image("unmute", "assets/img/unmute.png");
         this.load.image("popup", "assets/img/popup.png");
+        this.load.image("rock", "assets/img/rock.png");
+        this.load.image("parrot", "assets/img/parrot.png");
         this.load.audio("music", "assets/audio/bg.mp3");
     }
 
@@ -25,12 +27,18 @@ export default class titleScene extends Phaser.Scene {
         this.music = this.sound.add("music", {loop: true});
         this.music.play();
 
+        //collection record
+        let collectables: Record<string, boolean> = {
+            rock: false,
+            parrot: false
+        };
+
         //start button
         this.start = this.add
             .rectangle(500, 550, 200, 100, 0x0000)
             .setInteractive();
         this.start.on("pointerup", () => {
-            this.scene.stop("titleScene").launch("level1");
+            this.scene.pause("titleScene").launch("level1", collectables);
         });
         this.add.text(425, 530, "Start", { color: "white", fontSize: "48px" });
 
@@ -39,7 +47,7 @@ export default class titleScene extends Phaser.Scene {
             .rectangle(850, 550, 400, 100, 0x0000)
             .setInteractive();
         this.collection.on("pointerup", () => {
-            new Collectables(this).generateMenu();
+            new Collectables(this).generateMenu(collectables);
         });
         this.add.text(680, 530, "Collectables", {
             color: "white",
@@ -47,7 +55,24 @@ export default class titleScene extends Phaser.Scene {
         });
 
         //mute button
-        this.unmute = this.add.image(50, 50, "unmute").setInteractive().setVisible(false);
+        this.mute = this.add
+            .image(50, 50, "mute")
+            .setInteractive()
+            .setVisible(false);
+        this.mute.setAlpha(0.7);
+        this.mute.on("pointerover", () => {
+            this.mute.setAlpha(1);
+        });
+        this.mute.on("pointerout", () => {
+            this.mute.setAlpha(0.7);
+        });
+        this.mute.on("pointerup", () => {
+            this.mute.setVisible(false);
+            this.unmute.setVisible(true);
+            this.music.resume();
+        });
+
+        this.unmute = this.add.image(50, 50, "unmute").setInteractive();
         this.unmute.setAlpha(.7);
         this.unmute.on("pointerover", () => {
             this.unmute.setAlpha(1);
@@ -58,20 +83,6 @@ export default class titleScene extends Phaser.Scene {
         this.unmute.on("pointerup", () => {
             this.unmute.setVisible(false);
             this.mute.setVisible(true);
-            this.music.resume();
-        });
-
-        this.mute = this.add.image(50, 50, "mute").setInteractive();
-        this.mute.setAlpha(.7);
-        this.mute.on("pointerover", () => {
-            this.mute.setAlpha(1);
-        });
-        this.mute.on("pointerout", () => {
-            this.mute.setAlpha(.7);
-        });
-        this.mute.on("pointerup", () => {
-            this.mute.setVisible(false);
-            this.unmute.setVisible(true);
             this.music.pause();
         });
     }

@@ -10,7 +10,7 @@ export default class Collectables extends Phaser.GameObjects.Container {
         this.scene.add.existing(this);
     }
 
-    generateMenu(){
+    generateMenu(collectables: Record<string, boolean>){
         this.menu = this.scene.add
             .image(225, 125, "popup")
             .setOrigin(0)
@@ -34,6 +34,21 @@ export default class Collectables extends Phaser.GameObjects.Container {
         });
 
         this.box = this.scene.add.container(0, 0, [this.menu, this.close]);
+
+        let x = 350;
+        let y = 250;
+
+        Object.entries(collectables).forEach((object) => {
+            if(object[1]){
+                this.box.add(this.scene.add.image(x, y, object[0]).setScale(0.4));
+                x += 200;
+                if (x > 750) {
+                    x = 350;
+                    y += 100;
+                }
+            }
+        });
+        this.box.update();
     }
 
 
