@@ -27,20 +27,32 @@ export default class level2 extends Phaser.Scene {
         this.index = 0;
         this.isHat = false;
         this.options = [];
-        this.monkeyVals = ["brown", "yellow"];
+        this.monkeyVals = ["brown", "hatless", "blue", "pirate hat", "yellow", "pirate hat"];
         //Add more conditions for more questions?
         this.conditions = [
-            {
-                if:"if(monkey.hat == 'pirate hat'){",
+            /* {
+                if:"if(monkey.hat == 'pirate hat'){", //Set Brown
                 else: "else if(monkey.color == 'blue'){"
+            }, */
+            {
+                if:"if(monkey.hat == 'party hat'){",
+                else: "else if(monkey.color == 'blue'){" // Set Hatless
             },
             {
-                if:"if(monkey.hat != 'party hat'){",
+                if:"if(monkey.hat == 'hatless'){", // Set Blue
+                else: "else if(monkey.color == 'brown'){"
+            },
+            {
+                if: "if(monkey.hat == 'party hat'){",
+                else: "else{" // Set Pirate Hat
+            },
+            {
+                if: "if(monkey.hat == 'party hat'){", //Set Yellow
                 else: "else{"
             },
             {
-                if:"if(monkey.hat == 'hatless'){",
-                else: "else if(monkey.color == 'blue'){"
+                if: "if(monkey.hat == 'Pirate hat'){",
+                else: "else{" // Set Party Hat
             }
         ]
 }
@@ -268,7 +280,7 @@ export default class level2 extends Phaser.Scene {
                     });
                     this.changeMonkey(gameObject);
                     gameObject.destroy();
-                    
+
                     graphics.clear();
                     graphics.lineStyle(2, 0xffff00);
                     if (dropZone.input) {
@@ -412,7 +424,9 @@ export default class level2 extends Phaser.Scene {
             this.options = temp;
             //console.log(this.index);
             //console.log(this.monkeys[this.index]);
-            this.monkey = this.add.image(350, 325, this.monkeys[this.index]);
+            console.log(this.monkeyVals[this.index%3]);
+            console.log(this.monkeys[this.index%3]);
+            this.monkey = this.add.image(350, 325, this.monkeys[this.index % 3]);
             this.changeCondition();
             console.log(this.options[this.index]);
             this.index++;
