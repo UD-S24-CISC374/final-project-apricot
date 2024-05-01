@@ -19,6 +19,7 @@ export default class level2 extends Phaser.Scene {
     private isElse: boolean;
     private elseStatement: Phaser.GameObjects.Text;
     private elseIfStatement: Phaser.GameObjects.Text;
+    private monkeyVals: Array<string>;
 
     constructor() {
         super({ key: "level2" });
@@ -27,6 +28,7 @@ export default class level2 extends Phaser.Scene {
         this.isHat = false;
         this.options = [];
         this.isElse = false;
+        this.monkeyVals = ["brown", "hatless"];
     }
 
     preload() {
@@ -245,11 +247,10 @@ export default class level2 extends Phaser.Scene {
                 gameObject.x = dropZone.x - 50;
                 gameObject.y = dropZone.y - 25;
 
-                let monkeyVals: Array<string> = this.getMonkeyVals();
 
                 if (
-                    (gameObject.text == monkeyVals[this.index] && dropZone == dropZoneColor && !this.isHat) ||
-                    (gameObject.text == monkeyVals[this.index] && dropZone == dropZoneHat && this.isHat)
+                    (gameObject.text == this.monkeyVals[this.index] && dropZone == dropZoneColor && !this.isHat) ||
+                    (gameObject.text == this.monkeyVals[this.index] && dropZone == dropZoneHat && this.isHat)
                 ) {
                     gameObject.setColor("green");
                     this.correct.play();
@@ -384,7 +385,10 @@ export default class level2 extends Phaser.Scene {
             this.destroy,
         ]);
     }
-
+    /**
+     * @param old The old monkey that was on the screen, will be destroyed.
+     * This function changes the monkey on the screen to the next monkey in the list.
+     */
     changeMonkey(old: Phaser.GameObjects.Text) {
         if (this.index < 6) {
             this.monkey.destroy();
