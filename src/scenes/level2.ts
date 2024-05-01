@@ -321,7 +321,9 @@ export default class level2 extends Phaser.Scene {
 
         this.generatePopUp();
     }
-
+    /**
+     * This function generates a pop up that explains the level to the user.
+     */
     generatePopUp() {
         this.popup = this.add
             .image(225, 125, "popup")
@@ -454,11 +456,10 @@ export default class level2 extends Phaser.Scene {
             ]);
         }
     }
-
-    getMonkeyVals() {
-        return ["brown", "hatless"];
-    }
-
+    /**
+     * This function changes the text of the else statement to the else if statement and vice versa.
+     * It also changes the visibility of the statements.
+     */
     changeElseElif(): void {
         if(this.isElse){
             this.elseStatement.setVisible(false);
