@@ -405,7 +405,6 @@ export default class level2 extends Phaser.Scene {
         if (this.index < this.conditions.length) {
             this.monkey.destroy();
             this.isHat = !this.isHat;
-            this.index++;
             let temp: Array<Phaser.GameObjects.Text> = [];
             this.options.map((option) => {
                 option != old ? temp.push(option) : null;
@@ -416,6 +415,7 @@ export default class level2 extends Phaser.Scene {
             this.monkey = this.add.image(350, 325, this.monkeys[this.index]);
             this.changeCondition();
             console.log(this.options[this.index]);
+            this.index++;
         } else {
             this.popup = this.add
                 .image(225, 125, "popup")
