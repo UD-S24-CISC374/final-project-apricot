@@ -88,7 +88,6 @@ export default class level1 extends Phaser.Scene {
             this.back.setAlpha(0.7);
         });
         this.back.on("pointerup", () => {
-            console.log(collectables)
             this.scene.stop("level1").resume("titleScene", collectables);
         });
 
@@ -408,7 +407,7 @@ export default class level1 extends Phaser.Scene {
             }
         );
         this.destroy = this.add
-            .text(575, 450, "CLOSE", {
+            .text(575, 550, "CLOSE", {
                 fontSize: "32px",
                 color: "blue",
                 align: "center",
@@ -466,7 +465,7 @@ export default class level1 extends Phaser.Scene {
                 }
             );
             this.destroy = this.add
-                .text(575, 450, "NEXT", {
+                .text(575, 550, "NEXT", {
                     fontSize: "32px",
                     color: "blue",
                     align: "center",

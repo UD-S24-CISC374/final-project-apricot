@@ -64,12 +64,10 @@ export default class titleScene extends Phaser.Scene {
         //collectables
         this.collect = this.add
             .image(800, 550, "collect")
-            .setScale(0.99)
             .setInteractive();
         this.collect2 = this.add
             .image(800, 550, "collect2")
             .setVisible(false)
-            .setScale(0.99)
             .setInteractive();
         this.collect.on("pointerover", () => {
             this.collect.setVisible(false);
