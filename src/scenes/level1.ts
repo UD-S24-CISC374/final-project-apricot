@@ -15,6 +15,8 @@ export default class level1 extends Phaser.Scene {
     private correct: Phaser.Sound.BaseSound;
     private rock: Phaser.GameObjects.Image;
     private parrot: Phaser.GameObjects.Image;
+    private screech: Phaser.Sound.BaseSound;
+    private impact: Phaser.Sound.BaseSound;
 
     constructor() {
         super({ key: "level1" });
@@ -39,6 +41,8 @@ export default class level1 extends Phaser.Scene {
         this.load.image("help", "assets/img/help-64.png");
         this.load.image("popup", "assets/img/popup.png");
         this.load.audio("correct", "assets/audio/correct-choice.mp3");
+        this.load.audio("screech", "assets/audio/screech.wav");
+        this.load.audio("impact", "assets/audio/rock.wav");
     }
 
     create(collectables: Record<string, boolean>) {
@@ -51,6 +55,8 @@ export default class level1 extends Phaser.Scene {
         });
         
         this.correct = this.sound.add("correct", { loop: false });
+        this.screech = this.sound.add("screech", { loop: false });
+        this.impact = this.sound.add("impact", { loop: false });
 
         //help button
         this.help = this.add.image(50, 35, "help").setInteractive();
@@ -323,6 +329,7 @@ export default class level1 extends Phaser.Scene {
                 .on("pointerup", () => {
                     collectables["rock" as keyof typeof collectables] = true;
                     this.rock.destroy();
+                    this.impact.play();
                 });
             this.parrot = this.add
                 .image(155, 140, "parrot")
@@ -331,30 +338,33 @@ export default class level1 extends Phaser.Scene {
                 .on("pointerup", () => {
                     collectables["parrot" as keyof typeof collectables] = true;
                     this.parrot.destroy();
+                    this.screech.play();
                 });
         } else if (
             collectables["rock" as keyof typeof collectables] &&
             !collectables["parrot" as keyof typeof collectables]
         ) {
             this.parrot = this.add
-                .image(200, 250, "parrot")
+                .image(155, 140, "parrot")
                 .setScale(0.7)
                 .setInteractive()
                 .on("pointerup", () => {
                     collectables["parrot" as keyof typeof collectables] = true;
                     this.parrot.destroy();
+                    this.screech.play();
                 });
         } else if (
             !collectables["rock" as keyof typeof collectables] &&
             collectables["parrot" as keyof typeof collectables]
         ) {
             this.rock = this.add
-                .image(300, 400, "rock")
+                .image(622, 649, "rock")
                 .setScale(0.4)
                 .setInteractive()
                 .on("pointerup", () => {
                     collectables["rock" as keyof typeof collectables] = true;
                     this.rock.destroy();
+                    this.impact.play();
                 });
         }
 

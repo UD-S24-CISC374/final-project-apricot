@@ -83,7 +83,7 @@ export default class titleScene extends Phaser.Scene {
             this.collect.setVisible(true);
             this.collect2.setVisible(false);
         });
-        this.collect.on("pointerup", () => {
+        this.collect2.on("pointerup", () => {
             new Collectables(this).generateMenu(collectables);
         });
 
