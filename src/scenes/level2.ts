@@ -147,14 +147,6 @@ export default class level2 extends Phaser.Scene {
             fontSize: "24px",
             color: "black",
         });
-        this.add.text(770, 410, "this.color = ", {
-            fontSize: "24px",
-            color: "black",
-        });
-        this.add.text(725, 450, "}", {
-            fontSize: "24px",
-            color: "black",
-        });
 
         //drop zones
         const dropZoneColor: Phaser.GameObjects.Zone = this.add
