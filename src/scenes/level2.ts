@@ -146,7 +146,7 @@ export default class level2 extends Phaser.Scene {
         let elseStatement = this.add.text(720, 360, "else{", {
             fontSize: "24px",
             color: "black",
-        });
+        }).setVisible(false);
 
         //drop zones
         const dropZoneColor: Phaser.GameObjects.Zone = this.add
