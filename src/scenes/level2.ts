@@ -16,6 +16,7 @@ export default class level2 extends Phaser.Scene {
     private index : number;
     private isHat: boolean;
     private options: Array<Phaser.GameObjects.Text>;
+    private isElse: boolean;
     private elseStatement: Phaser.GameObjects.Text;
     private elseIfStatement: Phaser.GameObjects.Text;
 
@@ -25,6 +26,7 @@ export default class level2 extends Phaser.Scene {
         this.index = 0;
         this.isHat = false;
         this.options = [];
+        this.isElse = false;
     }
 
     preload() {
@@ -454,12 +456,14 @@ export default class level2 extends Phaser.Scene {
     }
 
     changeElseToElif(): void {
-        this.elseStatement.setVisible(false);
-        this.elseIfStatement.setVisible(true);
-    }
-    changeElifToElse(): void {
-        this.elseStatement.setVisible(true);
-        this.elseIfStatement.setVisible(false);
+        if(this.isElse){
+            this.elseStatement.setVisible(false);
+            this.elseIfStatement.setVisible(true);
+        }
+        else{
+            this.elseStatement.setVisible(true);
+            this.elseIfStatement.setVisible(false);
+        }
     }
 
     update() {}
