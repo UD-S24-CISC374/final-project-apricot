@@ -17,6 +17,7 @@ export default class level2 extends Phaser.Scene {
     private isHat: boolean;
     private options: Array<Phaser.GameObjects.Text>;
     private isElse: boolean;
+    private ifStatement: Phaser.GameObjects.Text;
     private elseStatement: Phaser.GameObjects.Text;
     private elseIfStatement: Phaser.GameObjects.Text;
     private monkeyVals: Array<string>;
@@ -125,11 +126,11 @@ export default class level2 extends Phaser.Scene {
         //default monkey
         this.monkey = this.add.image(350, 325, this.monkeys[0]);
 
-        this.add.text(720, 100, "if(monkey.hat == 'pirate hat'){", {
+        this.ifStatement = this.add.text(720, 100, "if(monkey.hat == 'pirate hat'){", {
             fontSize: "24px",
             color: "black",
         });
-        let ifStatement = this.add.text(770, 150, "this.color = ", {
+        this.add.text(770, 150, "this.color = ", {
             fontSize: "22px",
             color: "black",
         });
