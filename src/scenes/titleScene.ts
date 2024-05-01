@@ -2,8 +2,10 @@ import Phaser from "phaser";
 import Collectables from "../objects/collectables";
 
 export default class titleScene extends Phaser.Scene {
-    private start: Phaser.GameObjects.Rectangle;
-    private collection: Phaser.GameObjects.Rectangle;
+    private start: Phaser.GameObjects.Image;
+    private start2: Phaser.GameObjects.Image;
+    private collect: Phaser.GameObjects.Image;
+    private collect2: Phaser.GameObjects.Image;
     private mute: Phaser.GameObjects.Image;
     private unmute: Phaser.GameObjects.Image;
     private music: Phaser.Sound.BaseSound;
@@ -19,39 +21,70 @@ export default class titleScene extends Phaser.Scene {
         this.load.image("popup", "assets/img/popup.png");
         this.load.image("rock", "assets/img/rock.png");
         this.load.image("parrot", "assets/img/parrot.png");
+        this.load.image("start", "assets/img/start.png");
+        this.load.image("start2", "assets/img/start2.png");
+        this.load.image("collect", "assets/img/collect.png");
+        this.load.image("collect2", "assets/img/collect2.png");
         this.load.audio("music", "assets/audio/bg.mp3");
     }
 
     create() {
         this.add.image(640, 360, "bg");
-        this.music = this.sound.add("music", {loop: true});
+        this.music = this.sound.add("music", { loop: true });
         this.music.play();
 
         //collection record
         let collectables: Record<string, boolean> = {
             rock: false,
-            parrot: false
+            parrot: false,
         };
 
         //start button
-        this.start = this.add
-            .rectangle(500, 550, 200, 100, 0x0000)
+        this.start = this.add.image(500, 550, "start").setInteractive();
+        this.start2 = this.add
+            .image(500, 550, "start2")
+            .setVisible(false)
             .setInteractive();
-        this.start.on("pointerup", () => {
+        this.start.on("pointerover", () => {
+            this.start.setVisible(false);
+            this.start2.setVisible(true);
+        });
+        this.start2.on("pointerover", () => {
+            this.start.setVisible(false);
+            this.start2.setVisible(true);
+        });
+        this.start2.on("pointerout", () => {
+            this.start.setVisible(true);
+            this.start2.setVisible(false);
+        });
+        this.start2.on("pointerup", () => {
             this.scene.pause("titleScene").launch("level1", collectables);
         });
-        this.add.text(425, 530, "Start", { color: "white", fontSize: "48px" });
 
         //collectables
-        this.collection = this.add
-            .rectangle(850, 550, 400, 100, 0x0000)
+        this.collect = this.add
+            .image(800, 550, "collect")
+            .setScale(0.99)
             .setInteractive();
-        this.collection.on("pointerup", () => {
-            new Collectables(this).generateMenu(collectables);
+        this.collect2 = this.add
+            .image(800, 550, "collect2")
+            .setVisible(false)
+            .setScale(0.99)
+            .setInteractive();
+        this.collect.on("pointerover", () => {
+            this.collect.setVisible(false);
+            this.collect2.setVisible(true);
         });
-        this.add.text(680, 530, "Collectables", {
-            color: "white",
-            fontSize: "48px",
+        this.collect2.on("pointerover", () => {
+            this.collect.setVisible(false);
+            this.collect2.setVisible(true);
+        });
+        this.collect2.on("pointerout", () => {
+            this.collect.setVisible(true);
+            this.collect2.setVisible(false);
+        });
+        this.collect.on("pointerup", () => {
+            new Collectables(this).generateMenu(collectables);
         });
 
         //mute button
@@ -73,12 +106,12 @@ export default class titleScene extends Phaser.Scene {
         });
 
         this.unmute = this.add.image(50, 50, "unmute").setInteractive();
-        this.unmute.setAlpha(.7);
+        this.unmute.setAlpha(0.7);
         this.unmute.on("pointerover", () => {
             this.unmute.setAlpha(1);
         });
         this.unmute.on("pointerout", () => {
-            this.unmute.setAlpha(.7);
+            this.unmute.setAlpha(0.7);
         });
         this.unmute.on("pointerup", () => {
             this.unmute.setVisible(false);
