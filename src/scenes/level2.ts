@@ -453,9 +453,13 @@ export default class level2 extends Phaser.Scene {
         return ["brown", "hatless"];
     }
 
-    changeElseIf(elseStatement: Phaser.GameObjects.Text, elseIfStatement: Phaser.GameObjects.Text) {
-        elseStatement.setVisible(true);
-        elseIfStatement.setVisible(false);
+    changeElseToElif(): void {
+        this.elseStatement.setVisible(false);
+        this.elseIfStatement.setVisible(true);
+    }
+    changeElifToElse(): void {
+        this.elseStatement.setVisible(true);
+        this.elseIfStatement.setVisible(false);
     }
 
     update() {}
