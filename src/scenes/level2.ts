@@ -16,11 +16,10 @@ export default class level2 extends Phaser.Scene {
     private index : number;
     private isHat: boolean;
     private options: Array<Phaser.GameObjects.Text>;
-    private isElse: boolean;
     private ifStatement: Phaser.GameObjects.Text;
     private elseStatement: Phaser.GameObjects.Text;
-    private elseIfStatement: Phaser.GameObjects.Text;
     private monkeyVals: Array<string>;
+    private conditions: Array<{if:string,else:string}>;
 
     constructor() {
         super({ key: "level2" });
@@ -28,9 +27,23 @@ export default class level2 extends Phaser.Scene {
         this.index = 0;
         this.isHat = false;
         this.options = [];
-        this.isElse = false;
-        this.monkeyVals = ["brown", "hatless"];
-    }
+        this.monkeyVals = ["brown", "yellow"];
+        //Add more conditions for more questions?
+        this.conditions = [
+            {
+                if:"if(monkey.hat == 'pirate hat'){",
+                else: "else if(monkey.color == 'blue'){"
+            },
+            {
+                if:"if(monkey.hat != 'party hat'){",
+                else: "else{"
+            },
+            {
+                if:"if(monkey.hat == 'hatless'){",
+                else: "else if(monkey.color == 'blue'){"
+            }
+        ]
+}
 
     preload() {
         this.load.image("background", "assets/img/background.png");
@@ -138,7 +151,7 @@ export default class level2 extends Phaser.Scene {
             fontSize: "24px",
             color: "black",
         });
-        this.elseIfStatement = this.add.text(720, 230, "else if(monkey.color == 'blue'){", {
+        this.elseStatement = this.add.text(720, 230, "else if(monkey.color == 'blue'){", {
             fontSize: "24px",
             color: "black",
         });
@@ -150,10 +163,6 @@ export default class level2 extends Phaser.Scene {
             fontSize: "24px",
             color: "black",
         });
-        this.elseStatement = this.add.text(720, 360, "else{", {
-            fontSize: "24px",
-            color: "black",
-        }).setVisible(false);
 
         //drop zones
         const dropZoneColor: Phaser.GameObjects.Zone = this.add
@@ -248,7 +257,6 @@ export default class level2 extends Phaser.Scene {
                 gameObject.x = dropZone.x - 50;
                 gameObject.y = dropZone.y - 25;
 
-
                 if (
                     (gameObject.text == this.monkeyVals[this.index] && dropZone == dropZoneColor && !this.isHat) ||
                     (gameObject.text == this.monkeyVals[this.index] && dropZone == dropZoneHat && this.isHat)
@@ -258,9 +266,6 @@ export default class level2 extends Phaser.Scene {
                     this.options.map((option) => {
                         option.setColor("white");
                     });
-                    console.log("this:" + this);
-                    
-                    console.log("HELLO");
                     this.changeMonkey(gameObject);
                     gameObject.destroy();
                     
@@ -277,6 +282,10 @@ export default class level2 extends Phaser.Scene {
                 }
                 else{
                     gameObject.setColor("red");
+                    console.log(gameObject.text);
+                    console.log(this.monkeyVals[this.index]);
+                    console.log(dropZone);
+                    console.log(this.isHat);
                     gameObject.x = origin[gameObject.text as keyof typeof origin].x;
                     gameObject.y = origin[gameObject.text as keyof typeof origin].y;
                 
@@ -393,7 +402,7 @@ export default class level2 extends Phaser.Scene {
      * This function changes the monkey on the screen to the next monkey in the list.
      */
     changeMonkey(old: Phaser.GameObjects.Text) {
-        if (this.index < 6) {
+        if (this.index < this.conditions.length) {
             this.monkey.destroy();
             this.isHat = !this.isHat;
             this.index++;
@@ -405,6 +414,8 @@ export default class level2 extends Phaser.Scene {
             //console.log(this.index);
             //console.log(this.monkeys[this.index]);
             this.monkey = this.add.image(350, 325, this.monkeys[this.index]);
+            this.changeCondition();
+            console.log(this.options[this.index]);
         } else {
             this.popup = this.add
                 .image(225, 125, "popup")
@@ -458,17 +469,12 @@ export default class level2 extends Phaser.Scene {
         }
     }
     /**
-     * This function changes the text of the else statement to the else if statement and vice versa.
-     * It also changes the visibility of the statements.
+     * This function changes the text of the conditions to different ones.
      */
-    changeElseElif(): void {
-        if(this.isElse){
-            this.elseStatement.setVisible(false);
-            this.elseIfStatement.setVisible(true);
-        }
-        else{
-            this.elseStatement.setVisible(true);
-            this.elseIfStatement.setVisible(false);
+    changeCondition(): void {
+        if(this.index < this.conditions.length){
+            this.ifStatement.setText(this.conditions[this.index].if);
+            this.elseStatement.setText(this.conditions[this.index].else);
         }
     }
 
