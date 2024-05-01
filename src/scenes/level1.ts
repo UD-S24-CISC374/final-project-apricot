@@ -397,7 +397,7 @@ export default class level1 extends Phaser.Scene {
             this.p1 = this.add.text(
                 290,
                 275,
-                "The next level hasn't been implemented yet, so click NEXT to go to level 2.",
+                "The next level is ready and waiting, so click NEXT to go to level 2.",
                 {
                     fontSize: "16px",
                     color: "black",
