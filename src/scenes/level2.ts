@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-export default class level1 extends Phaser.Scene {
+export default class level2 extends Phaser.Scene {
     private monkeys: Array<string>;
     private monkey: Phaser.GameObjects.Image;
     private help: Phaser.GameObjects.Image;
@@ -13,15 +13,49 @@ export default class level1 extends Phaser.Scene {
     private container: Phaser.GameObjects.Container;
     private back: Phaser.GameObjects.Image;
     private correct: Phaser.Sound.BaseSound;
-    private rock: Phaser.GameObjects.Image;
-    private parrot: Phaser.GameObjects.Image;
-    private screech: Phaser.Sound.BaseSound;
-    private impact: Phaser.Sound.BaseSound;
+    private index : number;
+    private isHat: boolean;
+    private options: Array<Phaser.GameObjects.Text>;
+    private ifStatement: Phaser.GameObjects.Text;
+    private elseStatement: Phaser.GameObjects.Text;
+    private monkeyVals: Array<string>;
+    private conditions: Array<{if:string,else:string}>;
 
     constructor() {
-        super({ key: "level1" });
+        super({ key: "level2" });
         this.monkeys = ["brown-pirate hat", "blue-hatless", "yellow-party hat"];
-    }
+        this.index = 0;
+        this.isHat = false;
+        this.options = [];
+        this.monkeyVals = ["brown", "hatless", "yellow", "pirate hat", "blue", "party hat"];
+        //Add more conditions for more questions?
+        this.conditions = [
+            {
+                if:"if(monkey.hat == 'pirate hat'){", //Set Brown
+                else: "else if(monkey.color == 'blue'){"
+            },
+            {
+                if:"if(monkey.hat == 'pirate hat'){",
+                else: "else if(monkey.color == 'blue'){" // Set Hatless
+            },
+            {
+                if:"if(monkey.hat == 'party hat'){", // Set yellow
+                else: "else if(monkey.color == 'brown'){"
+            },
+            {
+                if: "if(monkey.hat == 'party hat'){",
+                else: "else{" // Set Pirate Hat
+            },
+            {
+                if: "if(monkey.hat == 'hatless'){", //Set blue
+                else: "else{"
+            },
+            {
+                if: "if(monkey.hat == 'Pirate hat'){",
+                else: "else{" // Set Party Hat
+            }
+        ]
+}
 
     preload() {
         this.load.image("background", "assets/img/background.png");
@@ -41,22 +75,18 @@ export default class level1 extends Phaser.Scene {
         this.load.image("help", "assets/img/help-64.png");
         this.load.image("popup", "assets/img/popup.png");
         this.load.audio("correct", "assets/audio/correct-choice.mp3");
-        this.load.audio("screech", "assets/audio/screech.wav");
-        this.load.audio("impact", "assets/audio/rock.wav");
     }
 
-    create(collectables: Record<string, boolean>) {
+    create() {
         //background + header
         this.add.image(350, 360, "background");
         this.add.rectangle(640, 0, 1280, 150, 0x0000);
 
-        this.add.text(545, 10, "Level 1x", {
+        this.add.text(545, 10, "Level 2", {
             fontSize: "48px",
         });
         
         this.correct = this.sound.add("correct", { loop: false });
-        this.screech = this.sound.add("screech", { loop: false });
-        this.impact = this.sound.add("impact", { loop: false });
 
         //help button
         this.help = this.add.image(50, 35, "help").setInteractive();
@@ -88,7 +118,7 @@ export default class level1 extends Phaser.Scene {
             this.back.setAlpha(0.7);
         });
         this.back.on("pointerup", () => {
-            this.scene.stop("level1").resume("titleScene", collectables);
+            this.scene.stop("level2").launch("titleScene");
         });
 
         //side boxes
@@ -96,67 +126,64 @@ export default class level1 extends Phaser.Scene {
         this.add.rectangle(1000, 650, 600, 450, 0x9999);
 
         this.add.image(350, 325, "brown-pirate");
-        this.input.setDraggable(
-            this.add
-                .text(720, 500, "brown", { fontSize: "42px" })
-                .setInteractive(),
-            true
-        );
-        this.input.setDraggable(
-            this.add
-                .text(1000, 500, "blue", { fontSize: "42px" })
-                .setInteractive(),
-            true
-        );
-        this.input.setDraggable(
-            this.add
-                .text(720, 550, "pirate hat", { fontSize: "42px" })
-                .setInteractive(),
-            true
-        );
-        this.input.setDraggable(
-            this.add
-                .text(1000, 550, "yellow", { fontSize: "42px" })
-                .setInteractive(),
-            true
-        );
-        this.input.setDraggable(
-            this.add
-                .text(720, 600, "hatless", { fontSize: "42px" })
-                .setInteractive(),
-            true
-        );
-        this.input.setDraggable(
-            this.add
-                .text(1000, 600, "party hat", { fontSize: "42px" })
-                .setInteractive(),
-            true
-        );
+        const origin: Record<string, { x: number; y: number }> = {
+            "brown": { x: 720, y: 500 },
+            "blue": { x: 1000, y: 500 },
+            "pirate hat": { x: 720, y: 550 },
+            "yellow": { x: 1000, y: 550 },
+            "hatless": { x: 720, y: 600 },
+            "party hat": { x: 1000, y: 600 }
+        };
+        let brown = this.add.text(720, 500, "brown", { fontSize: "42px" }).setInteractive();
+        let pirateHat = this.add.text(720, 550, "pirate hat", { fontSize: "42px" }).setInteractive();
+        let blue = this.add.text(1000, 500, "blue", { fontSize: "42px" }).setInteractive();
+        let yellow = this.add.text(1000, 550, "yellow", { fontSize: "42px" }).setInteractive();
+        let hatless = this.add.text(720, 600, "hatless", { fontSize: "42px" }).setInteractive();
+        let partyHat = this.add.text(1000, 600, "party hat", { fontSize: "42px" }).setInteractive();
+        this.options = [brown, blue, pirateHat, yellow, hatless, partyHat];
+        this.input.setDraggable(brown,true);
+        this.input.setDraggable(blue,true);
+        this.input.setDraggable(pirateHat,true);
+        this.input.setDraggable(yellow,true);
+        this.input.setDraggable(hatless,true);
+        this.input.setDraggable(partyHat,true);
 
         //default monkey
         this.monkey = this.add.image(350, 325, this.monkeys[0]);
 
-        this.add.text(720, 100, "class Monkey:", {
-            fontSize: "42px",
+        this.ifStatement = this.add.text(720, 100, this.conditions[0].if, {
+            fontSize: "24px",
             color: "black",
         });
-        this.add.text(750, 175, "color:", {
-            fontSize: "32px",
+        this.add.text(770, 150, "this.color = ", {
+            fontSize: "22px",
             color: "black",
         });
-        this.add.text(750, 250, "hat:", {
-            fontSize: "32px",
+        this.add.text(725, 190, "}", {
+            fontSize: "24px",
+            color: "black",
+        });
+        this.elseStatement = this.add.text(720, 230, this.conditions[0].else, {
+            fontSize: "24px",
+            color: "black",
+        });
+        this.add.text(770, 280, "this.hat = ", {
+            fontSize: "24px",
+            color: "black",
+        });
+        this.add.text(725, 320, "}", {
+            fontSize: "24px",
             color: "black",
         });
 
         //drop zones
         const dropZoneColor: Phaser.GameObjects.Zone = this.add
-            .zone(950, 196, 150, 50)
-            .setRectangleDropZone(150, 50)
+            .zone(1010, 165, 150, 50)
+            .setRectangleDropZone(250, 50)
             .setInteractive();
         const dropZoneHat: Phaser.GameObjects.Zone = this.add
-            .zone(950, 270, 150, 50)
-            .setRectangleDropZone(150, 50)
+            .zone(1010, 290, 150, 50)
+            .setRectangleDropZone(250, 50)
             .setInteractive();
 
         const graphics = this.add.graphics();
@@ -177,9 +204,6 @@ export default class level1 extends Phaser.Scene {
                 dropZoneHat.input.hitArea.height
             );
         }
-
-        let flag: boolean = false;
-        let temp: Phaser.GameObjects.Text | null = null;
 
         //drag and drop
         this.input.on(
@@ -245,27 +269,18 @@ export default class level1 extends Phaser.Scene {
                 gameObject.x = dropZone.x - 50;
                 gameObject.y = dropZone.y - 25;
 
-                let monkeyVals: Array<string> = this.getMonkeyVals();
-
                 if (
-                    (gameObject.text == monkeyVals[0] &&
-                        dropZone == dropZoneColor) ||
-                    (gameObject.text == monkeyVals[1] &&
-                        dropZone == dropZoneHat)
+                    (gameObject.text == this.monkeyVals[this.index] && dropZone == dropZoneColor && !this.isHat) ||
+                    (gameObject.text == this.monkeyVals[this.index] && dropZone == dropZoneHat && this.isHat)
                 ) {
                     gameObject.setColor("green");
                     this.correct.play();
-                    if (!flag) {
-                        flag = true;
-                        temp = gameObject;
-                    } else {
-                        if (gameObject.input && temp) {
-                            gameObject.destroy();
-                            temp.destroy();
-                            this.changeMonkey();
-                            flag = false;
-                        }
-                    }
+                    this.options.map((option) => {
+                        option.setColor("white");
+                    });
+                    this.changeMonkey(gameObject);
+                    gameObject.destroy();
+
                     graphics.clear();
                     graphics.lineStyle(2, 0xffff00);
                     if (dropZone.input) {
@@ -276,6 +291,16 @@ export default class level1 extends Phaser.Scene {
                             dropZone.input.hitArea.height
                         );
                     }
+                }
+                else{
+                    gameObject.setColor("red");
+                    console.log(gameObject.text);
+                    console.log(this.monkeyVals[this.index]);
+                    console.log(dropZone);
+                    console.log(this.isHat);
+                    gameObject.x = origin[gameObject.text as keyof typeof origin].x;
+                    gameObject.y = origin[gameObject.text as keyof typeof origin].y;
+                
                 }
             }
         );
@@ -316,60 +341,11 @@ export default class level1 extends Phaser.Scene {
             }
         );
 
-        //collectables
-        if (
-            !collectables["rock" as keyof typeof collectables] &&
-            !collectables["parrot" as keyof typeof collectables]
-        ) {
-            this.rock = this.add
-                .image(622, 649, "rock")
-                .setScale(0.4)
-                .setInteractive()
-                .on("pointerup", () => {
-                    collectables["rock" as keyof typeof collectables] = true;
-                    this.rock.destroy();
-                    this.impact.play();
-                });
-            this.parrot = this.add
-                .image(155, 140, "parrot")
-                .setScale(0.7)
-                .setInteractive()
-                .on("pointerup", () => {
-                    collectables["parrot" as keyof typeof collectables] = true;
-                    this.parrot.destroy();
-                    this.screech.play();
-                });
-        } else if (
-            collectables["rock" as keyof typeof collectables] &&
-            !collectables["parrot" as keyof typeof collectables]
-        ) {
-            this.parrot = this.add
-                .image(155, 140, "parrot")
-                .setScale(0.7)
-                .setInteractive()
-                .on("pointerup", () => {
-                    collectables["parrot" as keyof typeof collectables] = true;
-                    this.parrot.destroy();
-                    this.screech.play();
-                });
-        } else if (
-            !collectables["rock" as keyof typeof collectables] &&
-            collectables["parrot" as keyof typeof collectables]
-        ) {
-            this.rock = this.add
-                .image(622, 649, "rock")
-                .setScale(0.4)
-                .setInteractive()
-                .on("pointerup", () => {
-                    collectables["rock" as keyof typeof collectables] = true;
-                    this.rock.destroy();
-                    this.impact.play();
-                });
-        }
-
         this.generatePopUp();
     }
-
+    /**
+     * This function generates a pop up that explains the level to the user.
+     */
     generatePopUp() {
         this.popup = this.add
             .image(225, 125, "popup")
@@ -378,7 +354,7 @@ export default class level1 extends Phaser.Scene {
         this.title = this.add.text(
             290,
             200,
-            "Welcome to Level 1 of Jungle Quest!",
+            "Welcome to Level 2 of Jungle Quest!",
             {
                 fontSize: "32px",
                 color: "black",
@@ -387,7 +363,7 @@ export default class level1 extends Phaser.Scene {
         this.p1 = this.add.text(
             290,
             275,
-            "In this level, we want to fill in the Monkey class's field values based on the appearance of the monkey on the left of the screen.",
+            "In this level, we'll be working with conditionals. You'll be given a monkey and depending on the condition, you'll need to drag the correct descriptive word to the correct drop zone.",
             {
                 fontSize: "16px",
                 color: "black",
@@ -398,7 +374,7 @@ export default class level1 extends Phaser.Scene {
         this.p2 = this.add.text(
             290,
             350,
-            "Fill in the blanks by dragging the correct descriptive word. If you make a mistake, click the back button to return to the main menu and try again.",
+            "The keyword 'this' refers to the object referenced, so for us that is the monkey on the screen",
             {
                 fontSize: "16px",
                 color: "black",
@@ -407,7 +383,7 @@ export default class level1 extends Phaser.Scene {
             }
         );
         this.destroy = this.add
-            .text(575, 550, "CLOSE", {
+            .text(575, 450, "CLOSE", {
                 fontSize: "32px",
                 color: "blue",
                 align: "center",
@@ -433,12 +409,23 @@ export default class level1 extends Phaser.Scene {
             this.destroy,
         ]);
     }
-
-    changeMonkey() {
-        let index: number = this.monkeys.indexOf(this.monkey.texture.key) + 1;
-        if (index < 3) {
+    /**
+     * @param old The old monkey that was on the screen, will be destroyed.
+     * This function changes the monkey on the screen to the next monkey in the list.
+     */
+    changeMonkey(old: Phaser.GameObjects.Text) {
+        if (this.index < this.conditions.length-1) {
             this.monkey.destroy();
-            this.monkey = this.add.image(350, 325, this.monkeys[index]);
+            this.isHat = !this.isHat;
+            let temp: Array<Phaser.GameObjects.Text> = [];
+            this.options.map((option) => {
+                option != old ? temp.push(option) : null;
+            });
+            this.options = temp;
+            this.index++;
+            this.changeCondition();
+            this.monkey = this.add.image(350, 325, this.monkeys[this.index % 3]);
+                        
         } else {
             this.popup = this.add
                 .image(225, 125, "popup")
@@ -456,7 +443,7 @@ export default class level1 extends Phaser.Scene {
             this.p1 = this.add.text(
                 290,
                 275,
-                "The next level is ready and waiting, so click NEXT to go to level 2.",
+                "The next level hasn't been implemented yet, so click NEXT to go to the title page.",
                 {
                     fontSize: "16px",
                     color: "black",
@@ -465,7 +452,7 @@ export default class level1 extends Phaser.Scene {
                 }
             );
             this.destroy = this.add
-                .text(575, 550, "NEXT", {
+                .text(575, 450, "NEXT", {
                     fontSize: "32px",
                     color: "blue",
                     align: "center",
@@ -480,7 +467,7 @@ export default class level1 extends Phaser.Scene {
             });
             this.destroy.on("pointerup", () => {
                 this.container.destroy();
-                this.scene.stop("level1").launch("level2");
+                this.scene.stop("level2").launch("titleScene");
             });
 
             this.container = this.add.container(0, 0, [
@@ -491,10 +478,16 @@ export default class level1 extends Phaser.Scene {
             ]);
         }
     }
-
-    getMonkeyVals() {
-        let key: string = this.monkey.texture.key;
-        return key.split("-");
+    /**
+     * This function changes the text of the conditions to different ones.
+     */
+    changeCondition(): void {
+        if(this.index < this.conditions.length){
+            console.log("this is the current conditon to be set");
+            console.log(this.conditions[this.index]);
+            this.ifStatement.setText(this.conditions[this.index].if);
+            this.elseStatement.setText(this.conditions[this.index].else);
+        }
     }
 
     update() {}

@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import titleScene from "./scenes/titleScene";
 import level1 from "./scenes/level1";
+import level2 from "./scenes/level2";
 
 const DEFAULT_WIDTH = 1280;
 const DEFAULT_HEIGHT = 720;
@@ -17,7 +18,7 @@ export const CONFIG = {
         width: DEFAULT_WIDTH,
         height: DEFAULT_HEIGHT,
     },
-    scene: [titleScene, level1],
+    scene: [titleScene, level1, level2],
     physics: {
         default: "arcade",
         arcade: {
