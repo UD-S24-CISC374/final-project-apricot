@@ -49,7 +49,7 @@ export default class level3 extends Phaser.Scene {
             {
                 type: "Parrot",
                 color: "MultiColor",
-                attr1Name: "multiColor",
+                attr1Name: "canSpeak",
                 attr1: "true",
                 attr2Name: "canFly",
                 attr2: "true"
