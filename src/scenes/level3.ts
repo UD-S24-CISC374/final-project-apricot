@@ -132,6 +132,7 @@ export default class level3 extends Phaser.Scene {
     }
 
     create() {
+        this.defaultValues();
         //background + header
         this.add.image(350, 360, "background");
         this.add.rectangle(640, 0, 1280, 150, 0x0000);
@@ -276,7 +277,7 @@ export default class level3 extends Phaser.Scene {
                 this.scene.restart();
             }
         });
-        
+
         //bananas
         this.banana1 = this.add
             .image(150, 200, "banana")
