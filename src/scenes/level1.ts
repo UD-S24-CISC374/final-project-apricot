@@ -555,7 +555,7 @@ export default class level1 extends Phaser.Scene {
                 this.container.destroy();
                 this.scene
                     .stop("level1")
-                    .launch("level2", { collectables: collectables });
+                    .launch("level2", collectables);
             });
 
             this.container = this.add.container(0, 0, [

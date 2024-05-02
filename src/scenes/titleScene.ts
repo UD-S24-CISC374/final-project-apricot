@@ -12,6 +12,7 @@ export default class titleScene extends Phaser.Scene {
 
     constructor() {
         super({ key: "titleScene" });
+       
     }
 
     preload() {
@@ -21,6 +22,8 @@ export default class titleScene extends Phaser.Scene {
         this.load.image("popup", "assets/img/popup.png");
         this.load.image("rock", "assets/img/rock.png");
         this.load.image("parrot", "assets/img/parrot.png");
+        this.load.image("lizard", "assets/img/lizard.png");
+        this.load.image("roo", "assets/img/roo.png");
         this.load.image("start", "assets/img/start.png");
         this.load.image("start2", "assets/img/start2.png");
         this.load.image("collect", "assets/img/collect.png");
@@ -34,10 +37,12 @@ export default class titleScene extends Phaser.Scene {
         this.music.play();
 
         //collection record
-        let collectables: Record<string, boolean> = {
-            rock: false,
-            parrot: false,
-        };
+         let collectables: Record<string, boolean> = {
+             rock: false,
+             parrot: false,
+             lizard: false,
+             roo: false,
+         };
 
         //start button
         this.start = this.add.image(500, 550, "start").setInteractive();

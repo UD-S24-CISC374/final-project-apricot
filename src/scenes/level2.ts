@@ -21,10 +21,13 @@ export default class level2 extends Phaser.Scene {
     private elseStatement: Phaser.GameObjects.Text;
     private monkeyVals: Array<string>;
     private conditions: Array<{ if: string; else: string }>;
+    private lizard: Phaser.GameObjects.Image;
+    private roo: Phaser.GameObjects.Image;
     private star1: Phaser.GameObjects.Image;
     private star2: Phaser.GameObjects.Image;
     private star3: Phaser.GameObjects.Image;
     private reset: Phaser.GameObjects.Image;
+    private bark: Phaser.Sound.BaseSound;
     private clock: Clock;
 
     constructor() {
@@ -91,6 +94,7 @@ export default class level2 extends Phaser.Scene {
         this.load.image("gold-star", "assets/img/gold-star.png");
         this.load.image("empty-star", "assets/img/empty-star.png");
         this.load.image("reset", "assets/img/reset.png");
+        this.load.audio("bark", "assets/audio/lizard.wav");
     }
 
     create(collectables: Record<string, boolean>) {
@@ -102,7 +106,8 @@ export default class level2 extends Phaser.Scene {
             fontSize: "48px",
         });
 
-        this.correct = this.sound.add("correct", { loop: false });
+        this.correct = this.sound.add("correct");
+        this.bark = this.sound.add("bark");
 
         this.clock = new Clock(this, {});
         this.clock.start();
@@ -138,6 +143,7 @@ export default class level2 extends Phaser.Scene {
         });
         this.back.on("pointerup", () => {
             this.clock.stop();
+            console.log(collectables);
             this.scene.stop("level2").resume("titleScene", collectables);
         });
 
@@ -393,8 +399,52 @@ export default class level2 extends Phaser.Scene {
         );
 
         //collectables
-        if (collectables.length) {
-            console.log("");
+        if (
+            !collectables["lizard" as keyof typeof collectables] &&
+            !collectables["roo" as keyof typeof collectables]
+        ) {
+            this.lizard = this.add
+                .image(605, 200, "lizard")
+                .setScale(0.7)
+                .setInteractive()
+                .on("pointerup", () => {
+                    this.bark.play();
+                    collectables["lizard" as keyof typeof collectables] = true;
+                    this.lizard.destroy();
+                });
+            this.roo = this.add
+                .image(155, 200, "roo")
+                .setScale(0.7)
+                .setInteractive()
+                .on("pointerup", () => {
+                    collectables["roo" as keyof typeof collectables] = true;
+                    this.roo.destroy();
+                });
+        } else if (
+            collectables["lizard" as keyof typeof collectables] &&
+            !collectables["roo" as keyof typeof collectables]
+        ) {
+            this.roo = this.add
+                .image(155, 140, "roo")
+                .setScale(0.7)
+                .setInteractive()
+                .on("pointerup", () => {
+                    collectables["roo" as keyof typeof collectables] = true;
+                    this.roo.destroy();
+                });
+        } else if (
+            !collectables["lizard" as keyof typeof collectables] &&
+            collectables["roo" as keyof typeof collectables]
+        ) {
+            this.lizard = this.add
+                .image(605, 200, "lizard")
+                .setScale(0.7)
+                .setInteractive()
+                .on("pointerup", () => {
+                    this.bark.play();
+                    collectables["lizard" as keyof typeof collectables] = true;
+                    this.lizard.destroy();
+                });
         }
 
         this.generatePopUp();
@@ -501,7 +551,7 @@ export default class level2 extends Phaser.Scene {
                 }
             );
 
-            if (this.clock.now < 25000) {
+            if (this.clock.now < 20000) {
                 this.star1 = this.add
                     .image(400, 350, "gold-star")
                     .setScale(0.5);
@@ -511,7 +561,7 @@ export default class level2 extends Phaser.Scene {
                 this.star3 = this.add
                     .image(800, 350, "gold-star")
                     .setScale(0.5);
-            } else if (this.clock.now < 30000) {
+            } else if (this.clock.now < 25000) {
                 this.star1 = this.add
                     .image(400, 350, "gold-star")
                     .setScale(0.5);
@@ -521,7 +571,7 @@ export default class level2 extends Phaser.Scene {
                 this.star3 = this.add
                     .image(800, 350, "empty-star")
                     .setScale(0.5);
-            } else if (this.clock.now < 35000) {
+            } else if (this.clock.now < 30000) {
                 this.star1 = this.add
                     .image(400, 350, "gold-star")
                     .setScale(0.5);

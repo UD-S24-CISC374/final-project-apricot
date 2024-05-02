@@ -66,8 +66,8 @@ export default class Collectables extends Phaser.GameObjects.Container {
                             this.generateFact(object[0]);
                         })
                 );
-                x += 200;
-                if (x > 750) {
+                x += 175;
+                if (x > 900) {
                     x = 350;
                     y += 100;
                 }
