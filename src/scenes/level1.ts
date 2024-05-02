@@ -116,7 +116,7 @@ export default class level1 extends Phaser.Scene {
         });
         this.reset.on("pointerup", () => {
             this.clock.stop();
-            this.scene.restart({firstTry: false});
+            this.scene.restart();
         });
 
         //side boxes

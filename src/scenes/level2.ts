@@ -138,7 +138,7 @@ export default class level2 extends Phaser.Scene {
         });
         this.back.on("pointerup", () => {
             this.clock.stop();
-            this.scene.stop("level2").resume("titleScene");
+            this.scene.stop("level2").resume("titleScene", collectables);
         });
 
         //reset button
