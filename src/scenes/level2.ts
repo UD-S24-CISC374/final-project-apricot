@@ -23,6 +23,34 @@ export default class level2 extends Phaser.Scene {
 
     constructor() {
         super({ key: "level2" });
+        this.defaultValues();
+}
+
+    preload() {
+        this.load.image("background", "assets/img/background.png");
+        this.load.image("back", "assets/img/back-button.png");
+        this.load.image(
+            "brown-pirate hat",
+            "assets/img/monkeys/monkey-brown-pirate.png"
+        );
+        this.load.image(
+            "blue-hatless",
+            "assets/img/monkeys/monkey-blue-hatless.png"
+        );
+        this.load.image(
+            "yellow-party hat",
+            "assets/img/monkeys/monkey-yellow-party.png"
+        );
+        this.load.image("help", "assets/img/help-64.png");
+        this.load.image("popup", "assets/img/popup.png");
+        this.load.audio("correct", "assets/audio/correct-choice.mp3");
+    }
+    /**
+     * This function sets the default values for the level.
+     * By setting them in a function like this, they reset when the level is restarted.
+     */
+    defaultValues(){
+        console.log("Default Values")
         this.monkeys = ["brown-pirate hat", "blue-hatless", "yellow-party hat"];
         this.index = 0;
         this.isHat = false;
@@ -55,31 +83,12 @@ export default class level2 extends Phaser.Scene {
                 else: "else{" // Set Party Hat
             }
         ]
-}
-
-    preload() {
-        this.load.image("background", "assets/img/background.png");
-        this.load.image("back", "assets/img/back-button.png");
-        this.load.image(
-            "brown-pirate hat",
-            "assets/img/monkeys/monkey-brown-pirate.png"
-        );
-        this.load.image(
-            "blue-hatless",
-            "assets/img/monkeys/monkey-blue-hatless.png"
-        );
-        this.load.image(
-            "yellow-party hat",
-            "assets/img/monkeys/monkey-yellow-party.png"
-        );
-        this.load.image("help", "assets/img/help-64.png");
-        this.load.image("popup", "assets/img/popup.png");
-        this.load.audio("correct", "assets/audio/correct-choice.mp3");
     }
-
     create() {
         //background + header
         this.add.image(350, 360, "background");
+        console.log("Create")
+        this.defaultValues();
         this.add.rectangle(640, 0, 1280, 150, 0x0000);
 
         this.add.text(545, 10, "Level 2", {
