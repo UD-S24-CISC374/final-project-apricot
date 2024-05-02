@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import Clock from "phaser3-rex-plugins/plugins/clock";
 
 export default class level3 extends Phaser.Scene {
     private animals: Array<string>;
@@ -20,6 +21,10 @@ export default class level3 extends Phaser.Scene {
     private banana1: Phaser.GameObjects.Image;
     private banana2: Phaser.GameObjects.Image;
     private banana3: Phaser.GameObjects.Image;
+    private star1: Phaser.GameObjects.Image;
+    private star2: Phaser.GameObjects.Image;
+    private star3: Phaser.GameObjects.Image;
+    private reset: Phaser.GameObjects.Image;
     /**Used for the index of the animal to change */
     private index: number;
     private count: number;
@@ -30,6 +35,7 @@ export default class level3 extends Phaser.Scene {
     private ifAction: Phaser.GameObjects.Text;
     private elseStatement: Phaser.GameObjects.Text;
     private elseAction: Phaser.GameObjects.Text;
+    private clock: Clock;
     /**
      * The values of the animals in the order they appear in the animals array.
      */
@@ -135,8 +141,11 @@ export default class level3 extends Phaser.Scene {
         this.load.image("popup", "assets/img/popup.png");
         this.load.image("coconut", "assets/img/coconut.png");
         this.load.image("banana", "assets/img/banana.png");
+        this.load.image("gold-star", "assets/img/gold-star.png");
+        this.load.image("empty-star", "assets/img/empty-star.png");
         this.load.audio("correct", "assets/audio/correct-choice.mp3");
         this.load.audio("incorrect", "assets/audio/incorrect-choice.mp3");
+        this.load.image("reset", "assets/img/reset.png");
     }
 
     create() {
@@ -151,6 +160,9 @@ export default class level3 extends Phaser.Scene {
 
         this.correct = this.sound.add("correct");
         this.incorrect = this.sound.add("incorrect");
+
+        this.clock = new Clock(this, {});
+        this.clock.start();
 
         //help button
         this.help = this.add.image(50, 35, "help").setInteractive();
@@ -183,6 +195,21 @@ export default class level3 extends Phaser.Scene {
         });
         this.back.on("pointerup", () => {
             this.scene.stop("level3").resume("titleScene");
+        });
+
+        //reset button
+        this.reset = this.add.image(230, 33, "reset").setInteractive();
+        this.reset.scale = 0.3;
+        this.reset.setAlpha(0.7);
+        this.reset.on("pointerover", () => {
+            this.reset.setAlpha(1);
+        });
+        this.reset.on("pointerout", () => {
+            this.reset.setAlpha(0.7);
+        });
+        this.reset.on("pointerup", () => {
+            this.clock.stop();
+            this.scene.restart();
         });
 
         //side boxes
@@ -290,7 +317,7 @@ export default class level3 extends Phaser.Scene {
                 }
             });
 
-            //sloth box
+        //sloth box
 
         //bananas
         const dropZoneSloth: Phaser.GameObjects.Zone = this.add
@@ -512,10 +539,52 @@ export default class level3 extends Phaser.Scene {
                     color: "black",
                 }
             );
+            if (this.clock.now < 20000) {
+                this.star1 = this.add
+                    .image(400, 350, "gold-star")
+                    .setScale(0.5);
+                this.star2 = this.add
+                    .image(600, 350, "gold-star")
+                    .setScale(0.5);
+                this.star3 = this.add
+                    .image(800, 350, "gold-star")
+                    .setScale(0.5);
+            } else if (this.clock.now < 25000) {
+                this.star1 = this.add
+                    .image(400, 350, "gold-star")
+                    .setScale(0.5);
+                this.star2 = this.add
+                    .image(600, 350, "gold-star")
+                    .setScale(0.5);
+                this.star3 = this.add
+                    .image(800, 350, "empty-star")
+                    .setScale(0.5);
+            } else if (this.clock.now < 30000) {
+                this.star1 = this.add
+                    .image(400, 350, "gold-star")
+                    .setScale(0.5);
+                this.star2 = this.add
+                    .image(600, 350, "empty-star")
+                    .setScale(0.5);
+                this.star3 = this.add
+                    .image(800, 350, "empty-star")
+                    .setScale(0.5);
+            } else {
+                this.star1 = this.add
+                    .image(400, 350, "empty-star")
+                    .setScale(0.5);
+                this.star2 = this.add
+                    .image(600, 350, "empty-star")
+                    .setScale(0.5);
+                this.star3 = this.add
+                    .image(800, 350, "empty-star")
+                    .setScale(0.5);
+            }
+
             this.p1 = this.add.text(
                 290,
-                275,
-                "Congrats on finishing, now go back to the title screen to play again or look at your collectables",
+                475,
+                "The next level hasn't been implemented yet, so click NEXT to go to the title page.",
                 {
                     fontSize: "16px",
                     color: "black",
@@ -524,7 +593,7 @@ export default class level3 extends Phaser.Scene {
                 }
             );
             this.destroy = this.add
-                .text(575, 450, "NEXT", {
+                .text(575, 550, "NEXT", {
                     fontSize: "32px",
                     color: "blue",
                     align: "center",
@@ -573,6 +642,5 @@ export default class level3 extends Phaser.Scene {
         }
     }
 
-    update() {
-    }
+    update() {}
 }
