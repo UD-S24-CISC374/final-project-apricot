@@ -209,7 +209,7 @@ export default class level3 extends Phaser.Scene {
             fontSize: "20px",
             color: "black",
         });
-        this.add.text(770, 500, this.animalTypes[0].color, {
+        this.superCall = this.add.text(770, 500, this.animalTypes[0].color, {
             fontSize: "20px",
             color: "black",
         });
