@@ -283,245 +283,46 @@ export default class level3 extends Phaser.Scene {
             .image(150, 200, "banana")
             .setScale(0.5)
             .setInteractive()
-            .on("pointerup", () => {
-                this.correct.play();
-                this.banana1.destroy();
-                this.count += 1;
-                if (this.count == 3) {
-                    this.changeAnimal();
-                }
-            });
         this.banana2 = this.add
             .image(450, 675, "banana")
             .setScale(0.5)
             .setInteractive()
-            .on("pointerup", () => {
-                this.correct.play();
-                this.banana2.destroy();
-                this.count += 1;
-                if (this.count == 3) {
-                    this.changeAnimal();
-                }
-            });
         this.banana3 = this.add
             .image(650, 300, "banana")
             .setScale(0.5)
             .setInteractive()
-            .on("pointerup", () => {
-                this.correct.play();
-                this.banana3.destroy();
-                this.count += 1;
-                if (this.count == 3) {
-                    this.changeAnimal();
-                }
-            });
-
-        //coconuts
-                this.coconut1 = this.add
-                    .image(150, 200, "coconut")
-                    .setScale(0.5)
-                    .setVisible(false)
-                    .setInteractive()
-                    .on("pointerup", () => {
-                        this.correct.play();
-                        this.coconut1.destroy();
-                        this.count += 1;
-                        if (this.count == 3) {
-                            this.changeAnimal();
-                        }
-                    });
-                this.coconut2 = this.add
-                    .image(450, 675, "coconut")
-                    .setScale(0.5)
-                    .setVisible(false)
-                    .setInteractive()
-                    .on("pointerup", () => {
-                        this.correct.play();
-                        this.coconut2.destroy();
-                        this.count += 1;
-                        if (this.count == 3) {
-                            this.changeAnimal();
-                        }
-                    });
-                this.coconut3 = this.add
-                    .image(650, 300, "coconut")
-                    .setScale(0.5)
-                    .setVisible(false)
-                    .setInteractive()
-                    .on("pointerup", () => {
-                        this.correct.play();
-                        this.coconut3.destroy();
-                        this.count += 1;
-                        if (this.count == 3) {
-                            this.changeAnimal();
-                        }
-                    });
-
 
         //drop zones
-        /* const dropZoneColor: Phaser.GameObjects.Zone = this.add
-            .zone(1010, 165, 150, 50)
-            .setRectangleDropZone(250, 50)
-            .setInteractive();
-        const dropZoneHat: Phaser.GameObjects.Zone = this.add
-            .zone(1010, 290, 150, 50)
-            .setRectangleDropZone(250, 50)
+        const dropZoneMonkey: Phaser.GameObjects.Zone = this.add
+            .zone(350, 325, 100, 100)
+            .setRectangleDropZone(100, 200)
             .setInteractive();
 
-        const graphics = this.add.graphics();
-        graphics.lineStyle(2, 0xffff00);
-        if (dropZoneColor.input) {
-            graphics.strokeRect(
-                dropZoneColor.x - dropZoneColor.input.hitArea.width / 2,
-                dropZoneColor.y - dropZoneColor.input.hitArea.height / 2,
-                dropZoneColor.input.hitArea.width,
-                dropZoneColor.input.hitArea.height
-            );
-        }
-        if (dropZoneHat.input) {
-            graphics.strokeRect(
-                dropZoneHat.x - dropZoneHat.input.hitArea.width / 2,
-                dropZoneHat.y - dropZoneHat.input.hitArea.height / 2,
-                dropZoneHat.input.hitArea.width,
-                dropZoneHat.input.hitArea.height
-            );
-        }
 
         //drag and drop
-        this.input.on(
-            "drag",
-            (
-                pointer: Phaser.Input.Pointer,
-                gameObject: { x: number; y: number },
-                dragX: number,
-                dragY: number
-            ) => {
-                gameObject.x = dragX;
-                gameObject.y = dragY;
+        this.input.on("drag", (pointer: Phaser.Input.Pointer, gameObject: {x:number, y: number}, dragX:number, dragY:number) => {
+            gameObject.x = dragX;
+            gameObject.y = dragY;
+        });
+        this.input.on("drop", (pointer: Phaser.Input.Pointer, gameObject: {x:number, y: number}, dropZone: Phaser.GameObjects.Zone) => {
+            gameObject.x = dropZone.x;
+            gameObject.y = dropZone.y;
+            let count = 0;
+            if (gameObject == this.banana1 && dropZone == dropZoneMonkey) {
+                this.banana1.destroy();
+                count += 1;
+            } else if (gameObject == this.banana2 && dropZone == dropZoneMonkey) {
+                this.banana2.destroy();
+                count += 1;
+            } else if (gameObject == this.banana3 && dropZone == dropZoneMonkey) {
+                this.banana3.destroy();
+                count += 1;
             }
-        );
-
-        this.input.on(
-            "dragenter",
-            (
-                pointer: Phaser.Input.Pointer,
-                gameObject: Phaser.GameObjects.Text,
-                dropZone: Phaser.GameObjects.Zone
-            ) => {
-                graphics.clear();
-                graphics.lineStyle(2, 0x00ffff);
-                if (dropZone.input) {
-                    graphics.strokeRect(
-                        dropZone.x - dropZone.input.hitArea.width / 2,
-                        dropZone.y - dropZone.input.hitArea.height / 2,
-                        dropZone.input.hitArea.width,
-                        dropZone.input.hitArea.height
-                    );
-                }
+            if (count == 3) {
+                this.correct.play();
+                this.changeAnimal();
             }
-        );
-
-        this.input.on(
-            "dragleave",
-            (
-                pointer: Phaser.Input.Pointer,
-                gameObject: Phaser.GameObjects.Text,
-                dropZone: Phaser.GameObjects.Zone
-            ) => {
-                graphics.clear();
-                graphics.lineStyle(2, 0xffff00);
-                if (dropZone.input) {
-                    graphics.strokeRect(
-                        dropZone.x - dropZone.input.hitArea.width / 2,
-                        dropZone.y - dropZone.input.hitArea.height / 2,
-                        dropZone.input.hitArea.width,
-                        dropZone.input.hitArea.height
-                    );
-                }
-            }
-        );
-
-        this.input.on(
-            "drop",
-            (
-                _pointer: Phaser.Input.Pointer,
-                gameObject: Phaser.GameObjects.Text,
-                dropZone: Phaser.GameObjects.Zone
-            ) => {
-                gameObject.x = dropZone.x - 50;
-                gameObject.y = dropZone.y - 25;
-
-                if (
-                    (gameObject.text == this.animalVals[this.index] && dropZone == dropZoneColor && !this.isHat) ||
-                    (gameObject.text == this.animalVals[this.index] && dropZone == dropZoneHat && this.isHat)
-                ) {
-                    gameObject.setColor("green");
-                    this.correct.play();
-                    this.options.map((option) => {
-                        option.setColor("white");
-                    });
-                    this.changeanimal(gameObject);
-                    gameObject.destroy();
-
-                    graphics.clear();
-                    graphics.lineStyle(2, 0xffff00);
-                    if (dropZone.input) {
-                        graphics.strokeRect(
-                            dropZone.x - dropZone.input.hitArea.width / 2,
-                            dropZone.y - dropZone.input.hitArea.height / 2,
-                            dropZone.input.hitArea.width,
-                            dropZone.input.hitArea.height
-                        );
-                    }
-                }
-                else{
-                    gameObject.setColor("red");
-                    console.log(gameObject.text);
-                    console.log(this.animalVals[this.index]);
-                    console.log(dropZone);
-                    console.log(this.isHat);
-                    gameObject.x = origin[gameObject.text as keyof typeof origin].x;
-                    gameObject.y = origin[gameObject.text as keyof typeof origin].y;
-                
-                }
-            }
-        );
-
-        this.input.on(
-            "dragend",
-            (
-                _pointer: Phaser.Input.Pointer,
-                gameObject: Phaser.GameObjects.Text,
-                dropped: boolean
-            ) => {
-                if (!dropped) {
-                    if (gameObject.input) {
-                        gameObject.x = gameObject.input.dragStartX;
-                        gameObject.y = gameObject.input.dragStartY;
-                    }
-                }
-
-                graphics.clear();
-                graphics.lineStyle(2, 0xffff00);
-                if (dropZoneColor.input) {
-                    graphics.strokeRect(
-                        dropZoneColor.x - dropZoneColor.input.hitArea.width / 2,
-                        dropZoneColor.y -
-                            dropZoneColor.input.hitArea.height / 2,
-                        dropZoneColor.input.hitArea.width,
-                        dropZoneColor.input.hitArea.height
-                    );
-                }
-                if (dropZoneHat.input) {
-                    graphics.strokeRect(
-                        dropZoneHat.x - dropZoneHat.input.hitArea.width / 2,
-                        dropZoneHat.y - dropZoneHat.input.hitArea.height / 2,
-                        dropZoneHat.input.hitArea.width,
-                        dropZoneHat.input.hitArea.height
-                    );
-                }
-            }
-        ); */
+        });
 
         this.generatePopUp();
     }
