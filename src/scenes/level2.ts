@@ -28,6 +28,7 @@ export default class level2 extends Phaser.Scene {
     private star3: Phaser.GameObjects.Image;
     private reset: Phaser.GameObjects.Image;
     private bark: Phaser.Sound.BaseSound;
+    private screech: Phaser.Sound.BaseSound;
     private clock: Clock;
 
     constructor() {
@@ -102,6 +103,7 @@ export default class level2 extends Phaser.Scene {
         this.load.image("empty-star", "assets/img/empty-star.png");
         this.load.image("reset", "assets/img/reset.png");
         this.load.audio("bark", "assets/audio/lizard.wav");
+        this.load.audio("screech", "assets/audio/roo.wav");
     }
 
     create(collectables: Record<string, boolean>) {
@@ -117,6 +119,7 @@ export default class level2 extends Phaser.Scene {
 
         this.correct = this.sound.add("correct");
         this.bark = this.sound.add("bark");
+        this.screech = this.sound.add("screech");
 
         this.clock = new Clock(this, {});
         this.clock.start();
@@ -426,6 +429,7 @@ export default class level2 extends Phaser.Scene {
                 .setScale(0.7)
                 .setInteractive()
                 .on("pointerup", () => {
+                    this.screech.play();
                     collectables["roo" as keyof typeof collectables] = true;
                     this.roo.destroy();
                 });
@@ -438,6 +442,7 @@ export default class level2 extends Phaser.Scene {
                 .setScale(0.7)
                 .setInteractive()
                 .on("pointerup", () => {
+                    this.screech.play();
                     collectables["roo" as keyof typeof collectables] = true;
                     this.roo.destroy();
                 });
@@ -605,7 +610,7 @@ export default class level2 extends Phaser.Scene {
             this.p1 = this.add.text(
                 290,
                 475,
-                "The next level hasn't been implemented yet, so click NEXT to go to the title page.",
+                "The next level is waiting for you, click NEXT to continue onwards.",
                 {
                     fontSize: "16px",
                     color: "black",
