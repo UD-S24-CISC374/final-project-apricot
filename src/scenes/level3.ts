@@ -13,8 +13,14 @@ export default class level3 extends Phaser.Scene {
     private container: Phaser.GameObjects.Container;
     private back: Phaser.GameObjects.Image;
     private correct: Phaser.Sound.BaseSound;
+    private coconut1: Phaser.GameObjects.Image;
+    private coconut2: Phaser.GameObjects.Image;
+    private coconut3: Phaser.GameObjects.Image;
+    private banana1: Phaser.GameObjects.Image;
+    private banana2: Phaser.GameObjects.Image;
+    private banana3: Phaser.GameObjects.Image;
     /**Used for the index of the animal to change */
-    private index : number;
+    private index: number;
 
     private isHat: boolean;
     private options: Array<Phaser.GameObjects.Text>;
@@ -25,11 +31,16 @@ export default class level3 extends Phaser.Scene {
     /**
      * The values of the animals in the order they appear in the animals array.
      */
-    private animalTypes: Array<{type: string, color: string,
-                                attr1Name: string, attr1: string,
-                                attr2Name: string, attr2: string}>;
-    private conditions: Array<{if:string,else:string}>;
-    private actions: Array<{if:string,else:string}>;
+    private animalTypes: Array<{
+        type: string;
+        color: string;
+        attr1Name: string;
+        attr1: string;
+        attr2Name: string;
+        attr2: string;
+    }>;
+    private conditions: Array<{ if: string; else: string }>;
+    private actions: Array<{ if: string; else: string }>;
     private headerText: Phaser.GameObjects.Text;
     private superCall: Phaser.GameObjects.Text;
     private attr1Text: Phaser.GameObjects.Text;
@@ -38,9 +49,9 @@ export default class level3 extends Phaser.Scene {
     constructor() {
         super({ key: "level3" });
         this.defaultValues();
-}
-    defaultValues(){
-        this.animals = ["brown-pirate hat", "parrot", "sloth"];
+    }
+    defaultValues() {
+        this.animals = ["brown-pirate hat", "parrot2", "sloth"];
         this.index = 0;
         this.isHat = false;
         this.options = [];
@@ -51,7 +62,7 @@ export default class level3 extends Phaser.Scene {
                 attr1Name: "this.hat",
                 attr1: `"pirate hat";`,
                 attr2Name: "this.canSwing",
-                attr2: "true;"
+                attr2: "true;",
             },
             {
                 type: "Class Parrot extends Animal{",
@@ -59,7 +70,7 @@ export default class level3 extends Phaser.Scene {
                 attr1Name: "this.canSpeak",
                 attr1: "true;",
                 attr2Name: "this.canFly",
-                attr2: "true;"
+                attr2: "true;",
             },
             {
                 type: "Class Sloth extends Animal{",
@@ -67,21 +78,29 @@ export default class level3 extends Phaser.Scene {
                 attr1Name: "clawCount",
                 attr1: "6;",
                 attr2Name: "this.isLazy",
-                attr2: "true;"
-            }
+                attr2: "true;",
+            },
         ];
         //Add more conditions for more questions?
         this.conditions = [
             {
-                if:"If statement location", //Set Brown
-                else: "Else statement location"
-            }
-        ]
+                if: "if(this.color == 'brown' or canSwing == False){", //Set Brown
+                else: "else if(this.hat == 'pirate hat){",
+            },
+            {
+                if: "if(this.canSpeak and this.canFly){",
+                else: "else if(this.color == 'red'){",
+            },
+        ];
         this.actions = [
             {
-                if: "If statement action",
-                else: "else statement action"
-            }
+                if: "action('Feed three bananas to the monkey.')",
+                else: "action('Click on the jaguar three times.')",
+            },
+            {
+                if: "action('Gather three coconuts.')",
+                else: "action('')",
+            },
         ];
     }
     preload() {
@@ -99,8 +118,12 @@ export default class level3 extends Phaser.Scene {
             "yellow-party hat",
             "assets/img/monkeys/monkey-yellow-party.png"
         );
+        this.load.image("parrot2", "assets/img/parrot2.png");
+        this.load.image("sloth", "assets/img/sloth.png");
         this.load.image("help", "assets/img/help-64.png");
         this.load.image("popup", "assets/img/popup.png");
+        this.load.image("coconut", "assets/img/coconut.png");
+        this.load.image("banana", "assets/img/banana.png");
         this.load.audio("correct", "assets/audio/correct-choice.mp3");
     }
 
@@ -112,7 +135,9 @@ export default class level3 extends Phaser.Scene {
         this.add.text(545, 10, "Level 3", {
             fontSize: "48px",
         });
-        
+
+        let count: number = 0;
+
         this.correct = this.sound.add("correct", { loop: false });
 
         //help button
@@ -155,15 +180,16 @@ export default class level3 extends Phaser.Scene {
         this.add.image(350, 325, "brown-pirate");
         /**
          * The origin locations of the text options to be dragged.
-         */
+         
         const origin: Record<string, { x: number; y: number }> = {
-            "brown": { x: 720, y: 500 },
-            "blue": { x: 1000, y: 500 },
+            brown: { x: 720, y: 500 },
+            blue: { x: 1000, y: 500 },
             "pirate hat": { x: 720, y: 550 },
-            "yellow": { x: 1000, y: 550 },
-            "hatless": { x: 720, y: 600 },
-            "party hat": { x: 1000, y: 600 }
+            yellow: { x: 1000, y: 550 },
+            hatless: { x: 720, y: 600 },
+            "party hat": { x: 1000, y: 600 },
         };
+        */
         //These are the main if statement locations, altered based on current status of level
         this.ifStatement = this.add.text(720, 100, this.conditions[0].if, {
             fontSize: "20px",
@@ -213,22 +239,109 @@ export default class level3 extends Phaser.Scene {
             fontSize: "20px",
             color: "black",
         });
-        this.attr1Text = this.add.text(770, 530, this.animalTypes[0].attr1Name + " = " + this.animalTypes[0].attr1, {
-            fontSize: "20px",
-            color: "black",
-        });
-        this.attr2Text = this.add.text(770, 560, this.animalTypes[0].attr2Name + " = " + this.animalTypes[0].attr2, {
-            fontSize: "20px",
-            color: "black",
-        });
+        this.attr1Text = this.add.text(
+            770,
+            530,
+            this.animalTypes[0].attr1Name + " = " + this.animalTypes[0].attr1,
+            {
+                fontSize: "20px",
+                color: "black",
+            }
+        );
+        this.attr2Text = this.add.text(
+            770,
+            560,
+            this.animalTypes[0].attr2Name + " = " + this.animalTypes[0].attr2,
+            {
+                fontSize: "20px",
+                color: "black",
+            }
+        );
         this.add.text(720, 590, "}", {
             fontSize: "20px",
             color: "black",
         });
 
-
         //default animal
         this.animal = this.add.image(350, 325, this.animals[0]);
+
+        //bananas
+        this.banana1 = this.add
+            .image(150, 200, "banana")
+            .setScale(0.5)
+            .setInteractive()
+            .on("pointerup", () => {
+                this.correct.play();
+                this.banana1.destroy();
+                count += 1;
+                if (count == 3) {
+                    this.changeAnimal();
+                }
+            });
+        this.banana2 = this.add
+            .image(450, 675, "banana")
+            .setScale(0.5)
+            .setInteractive()
+            .on("pointerup", () => {
+                this.correct.play();
+                this.banana2.destroy();
+                count += 1;
+                if (count == 3) {
+                    this.changeAnimal();
+                }
+            });
+        this.banana3 = this.add
+            .image(650, 300, "banana")
+            .setScale(0.5)
+            .setInteractive()
+            .on("pointerup", () => {
+                this.correct.play();
+                this.banana3.destroy();
+                count += 1;
+                if (count == 3) {
+                    this.changeAnimal();
+                }
+            });
+
+        //coconuts
+        if (this.animal.texture.key == "parrot2") {
+            this.coconut1 = this.add
+                .image(150, 200, "coconut")
+                .setScale(0.5)
+                .setInteractive()
+                .on("pointerup", () => {
+                    this.correct.play();
+                    this.coconut1.destroy();
+                    count += 1;
+                    if (count == 3) {
+                        this.changeAnimal();
+                    }
+                });
+            this.coconut2 = this.add
+                .image(450, 675, "coconut")
+                .setScale(0.5)
+                .setInteractive()
+                .on("pointerup", () => {
+                    this.correct.play();
+                    this.coconut2.destroy();
+                    count += 1;
+                    if (count == 3) {
+                        this.changeAnimal();
+                    }
+                });
+            this.coconut3 = this.add
+                .image(650, 300, "coconut")
+                .setScale(0.5)
+                .setInteractive()
+                .on("pointerup", () => {
+                    this.correct.play();
+                    this.coconut3.destroy();
+                    count += 1;
+                    if (count == 3) {
+                        this.changeAnimal();
+                    }
+                });
+        }
 
         //drop zones
         /* const dropZoneColor: Phaser.GameObjects.Zone = this.add
@@ -470,13 +583,12 @@ export default class level3 extends Phaser.Scene {
      * @param old The old animal that was on the screen, will be destroyed.
      * This function changes the animal on the screen to the next animal in the list.
      */
-    changeanimal() {
-        if (this.index < this.animals.length-1) {
+    changeAnimal() {
+        if (this.index < this.animals.length - 1) {
             this.animal.destroy();
             this.index++;
             this.changeText();
             this.animal = this.add.image(350, 325, this.animals[this.index]);
-                        
         } else {
             this.popup = this.add
                 .image(225, 125, "popup")
@@ -518,7 +630,7 @@ export default class level3 extends Phaser.Scene {
             });
             this.destroy.on("pointerup", () => {
                 this.container.destroy();
-                this.scene.stop("level2").launch("titleScene");
+                this.scene.stop("level3").resume("titleScene");
             });
 
             this.container = this.add.container(0, 0, [
@@ -533,14 +645,22 @@ export default class level3 extends Phaser.Scene {
      * This function changes the text of the of the activity to different ones.
      */
     changeText(): void {
-        if(this.index < this.conditions.length){
+        if (this.index < this.conditions.length) {
             this.ifAction.setText(this.actions[this.index].if);
             this.elseAction.setText(this.actions[this.index].else);
             this.ifStatement.setText(this.conditions[this.index].if);
             this.elseStatement.setText(this.conditions[this.index].else);
             this.headerText.setText(this.animalTypes[this.index].type);
-            this.attr1Text.setText(this.animalTypes[this.index].attr1Name + " = " + this.animalTypes[this.index].attr1);
-            this.attr2Text.setText(this.animalTypes[this.index].attr2Name + " = " + this.animalTypes[this.index].attr2);
+            this.attr1Text.setText(
+                this.animalTypes[this.index].attr1Name +
+                    " = " +
+                    this.animalTypes[this.index].attr1
+            );
+            this.attr2Text.setText(
+                this.animalTypes[this.index].attr2Name +
+                    " = " +
+                    this.animalTypes[this.index].attr2
+            );
         }
     }
 
