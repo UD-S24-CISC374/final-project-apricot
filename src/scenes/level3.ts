@@ -94,6 +94,10 @@ export default class level3 extends Phaser.Scene {
                 if: "if(this.canSpeak and this.canFly){",
                 else: "else if(this.color == 'red'){",
             },
+            {
+                if: "if(!this.isLazy){",
+                else: "else if(this.clawCount >= 6){",
+            },
         ];
         this.actions = [
             {
@@ -102,7 +106,11 @@ export default class level3 extends Phaser.Scene {
             },
             {
                 if: "action('Gather three coconuts.')",
-                else: "action('')",
+                else: "action('Click on the jaguar three times.')",
+            },
+            {
+                if: "action('Click on the jaguar three times.')",
+                else: "action('Move the sloth into the trees.')",
             },
         ];
     }
@@ -270,29 +278,72 @@ export default class level3 extends Phaser.Scene {
         this.animal = this.add.image(350, 325, this.animals[0]);
 
         let clicks = 0;
-        this.add.rectangle(175, 600, 300, 150, 0xFFFFF).setAlpha(0.000001).setInteractive().on("pointerup", () => {
-            clicks += 1;
-            if(clicks == 3){
-                this.incorrect.play();
-                this.scene.restart();
-            }
-        });
+        this.add
+            .rectangle(175, 600, 300, 150, 0xfffff)
+            .setAlpha(0.000001)
+            .setInteractive()
+            .on("pointerup", () => {
+                clicks += 1;
+                if (clicks == 3) {
+                    this.incorrect.play();
+                    this.scene.restart();
+                }
+            });
 
         //bananas
         this.banana1 = this.add
             .image(150, 200, "banana")
             .setScale(0.5)
-            .setInteractive()
+            .setInteractive();
         this.banana2 = this.add
             .image(450, 675, "banana")
             .setScale(0.5)
-            .setInteractive()
+            .setInteractive();
         this.banana3 = this.add
             .image(650, 300, "banana")
             .setScale(0.5)
+            .setInteractive();
+
+        //coconuts
+        this.coconut1 = this.add
+            .image(150, 200, "coconut")
+            .setScale(0.5)
+            .setVisible(false)
             .setInteractive()
-
-
+            .on("pointerup", () => {
+                this.correct.play();
+                this.coconut1.destroy();
+                this.count += 1;
+                if (this.count == 3) {
+                    this.changeAnimal();
+                }
+            });
+        this.coconut2 = this.add
+            .image(450, 675, "coconut")
+            .setScale(0.5)
+            .setVisible(false)
+            .setInteractive()
+            .on("pointerup", () => {
+                this.correct.play();
+                this.coconut2.destroy();
+                this.count += 1;
+                if (this.count == 3) {
+                    this.changeAnimal();
+                }
+            });
+        this.coconut3 = this.add
+            .image(650, 300, "coconut")
+            .setScale(0.5)
+            .setVisible(false)
+            .setInteractive()
+            .on("pointerup", () => {
+                this.correct.play();
+                this.coconut3.destroy();
+                this.count += 1;
+                if (this.count == 3) {
+                    this.changeAnimal();
+                }
+            });
 
         this.input.setDraggable(this.banana1);
         this.input.setDraggable(this.banana2);
@@ -303,30 +354,50 @@ export default class level3 extends Phaser.Scene {
             .setRectangleDropZone(100, 200)
             .setInteractive();
 
-
         //drag and drop
-        this.input.on("drag", (pointer: Phaser.Input.Pointer, gameObject: {x:number, y: number}, dragX:number, dragY:number) => {
-            gameObject.x = dragX;
-            gameObject.y = dragY;
-        });
-        this.input.on("drop", (pointer: Phaser.Input.Pointer, gameObject: {x:number, y: number}, dropZone: Phaser.GameObjects.Zone) => {
-            gameObject.x = dropZone.x;
-            gameObject.y = dropZone.y;
-            if (gameObject == this.banana1 && dropZone == dropZoneMonkey) {
-                this.banana1.destroy();
-                count += 1;
-            } else if (gameObject == this.banana2 && dropZone == dropZoneMonkey) {
-                this.banana2.destroy();
-                count += 1;
-            } else if (gameObject == this.banana3 && dropZone == dropZoneMonkey) {
-                this.banana3.destroy();
-                count += 1;
+        this.input.on(
+            "drag",
+            (
+                pointer: Phaser.Input.Pointer,
+                gameObject: { x: number; y: number },
+                dragX: number,
+                dragY: number
+            ) => {
+                gameObject.x = dragX;
+                gameObject.y = dragY;
             }
-            if (count == 3) {
-                this.correct.play();
-                this.changeAnimal();
+        );
+        this.input.on(
+            "drop",
+            (
+                pointer: Phaser.Input.Pointer,
+                gameObject: { x: number; y: number },
+                dropZone: Phaser.GameObjects.Zone
+            ) => {
+                gameObject.x = dropZone.x;
+                gameObject.y = dropZone.y;
+                if (gameObject == this.banana1 && dropZone == dropZoneMonkey) {
+                    this.banana1.destroy();
+                    this.count += 1;
+                } else if (
+                    gameObject == this.banana2 &&
+                    dropZone == dropZoneMonkey
+                ) {
+                    this.banana2.destroy();
+                    this.count += 1;
+                } else if (
+                    gameObject == this.banana3 &&
+                    dropZone == dropZoneMonkey
+                ) {
+                    this.banana3.destroy();
+                    this.count += 1;
+                }
+                if (this.count == 3) {
+                    this.correct.play();
+                    this.changeAnimal();
+                }
             }
-        });
+        );
 
         this.generatePopUp();
     }
