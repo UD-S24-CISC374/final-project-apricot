@@ -30,29 +30,36 @@ export default class level3 extends Phaser.Scene {
                                 attr2Name: string, attr2: string}>;
     private conditions: Array<{if:string,else:string}>;
     private actions: Array<{if:string,else:string}>;
+    private headerText: Phaser.GameObjects.Text;
+    private superCall: Phaser.GameObjects.Text;
+    private attr1Text: Phaser.GameObjects.Text;
+    private attr2Text: Phaser.GameObjects.Text;
 
     constructor() {
         super({ key: "level3" });
+        this.defaultValues();
+}
+    defaultValues(){
         this.animals = ["brown-pirate hat", "blue-hatless", "yellow-party hat"];
         this.index = 0;
         this.isHat = false;
         this.options = [];
         this.animalTypes = [
             {
-                type: "Monkey",
-                color: "brown",
-                attr1Name: "hat",
-                attr1: "pirate hat",
-                attr2Name: "canSwing",
-                attr2: "true"
+                type: "Class Monkey extends Animal{",
+                color: `super("brown");`,
+                attr1Name: "this.hat",
+                attr1: `"pirate hat";`,
+                attr2Name: "this.canSwing",
+                attr2: "true;"
             },
             {
-                type: "Parrot",
-                color: "MultiColor",
-                attr1Name: "canSpeak",
-                attr1: "true",
-                attr2Name: "canFly",
-                attr2: "true"
+                type: "Class Parrot extends Animal{",
+                color: `super("MultiColor");`,
+                attr1Name: "this.canSpeak",
+                attr1: "true;",
+                attr2Name: "this.canFly",
+                attr2: "true;"
             }
         ];
         //Add more conditions for more questions?
@@ -68,8 +75,7 @@ export default class level3 extends Phaser.Scene {
                 else: "else statement action"
             }
         ];
-}
-
+    }
     preload() {
         this.load.image("background", "assets/img/background.png");
         this.load.image("back", "assets/img/back-button.png");
@@ -191,19 +197,19 @@ export default class level3 extends Phaser.Scene {
         });
 
         //These are the classes for the different types of animals
-        this.add.text(720, 470, `Class ${this.animalTypes[0].type} extends Animal{`, {
+        this.headerText = this.add.text(720, 470, this.animalTypes[0].type, {
             fontSize: "20px",
             color: "black",
         });
-        this.add.text(770, 500, `super("${this.animalTypes[0].color}");`, {
+        this.add.text(770, 500, this.animalTypes[0].color, {
             fontSize: "20px",
             color: "black",
         });
-        this.add.text(770, 530, `this.${this.animalTypes[0].attr1Name} = "${this.animalTypes[0].attr1}";`, {
+        this.attr1Text = this.add.text(770, 530, this.animalTypes[0].attr1Name + " = " + this.animalTypes[0].attr1, {
             fontSize: "20px",
             color: "black",
         });
-        this.add.text(770, 560, `this.${this.animalTypes[0].attr2Name} = ${this.animalTypes[0].attr2};`, {
+        this.attr2Text = this.add.text(770, 560, this.animalTypes[0].attr2Name + " = " + this.animalTypes[0].attr2, {
             fontSize: "20px",
             color: "black",
         });
@@ -459,15 +465,9 @@ export default class level3 extends Phaser.Scene {
     changeanimal(old: Phaser.GameObjects.Text) {
         if (this.index < this.conditions.length-1) {
             this.animal.destroy();
-            this.isHat = !this.isHat;
-            let temp: Array<Phaser.GameObjects.Text> = [];
-            this.options.map((option) => {
-                option != old ? temp.push(option) : null;
-            });
-            this.options = temp;
             this.index++;
-            this.changeCondition();
-            this.animal = this.add.image(350, 325, this.animals[this.index % 3]);
+            this.changeText();
+            this.animal = this.add.image(350, 325, this.animals[this.index]);
                         
         } else {
             this.popup = this.add
@@ -524,12 +524,15 @@ export default class level3 extends Phaser.Scene {
     /**
      * This function changes the text of the conditions to different ones.
      */
-    changeCondition(): void {
+    changeText(): void {
         if(this.index < this.conditions.length){
-            console.log("this is the current conditon to be set");
-            console.log(this.conditions[this.index]);
+            this.ifAction.setText(this.actions[this.index].if);
+            this.elseAction.setText(this.actions[this.index].else);
             this.ifStatement.setText(this.conditions[this.index].if);
             this.elseStatement.setText(this.conditions[this.index].else);
+            this.headerText.setText(this.animalTypes[this.index].type);
+            this.attr1Text.setText(this.animalTypes[this.index].attr1Name + " = " + this.animalTypes[this.index].attr1);
+            this.attr2Text.setText(this.animalTypes[this.index].attr2Name + " = " + this.animalTypes[this.index].attr2);
         }
     }
 
