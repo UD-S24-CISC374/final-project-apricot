@@ -13,6 +13,7 @@ export default class level3 extends Phaser.Scene {
     private container: Phaser.GameObjects.Container;
     private back: Phaser.GameObjects.Image;
     private correct: Phaser.Sound.BaseSound;
+    private incorrect: Phaser.Sound.BaseSound;
     private coconut1: Phaser.GameObjects.Image;
     private coconut2: Phaser.GameObjects.Image;
     private coconut3: Phaser.GameObjects.Image;
@@ -125,6 +126,7 @@ export default class level3 extends Phaser.Scene {
         this.load.image("coconut", "assets/img/coconut.png");
         this.load.image("banana", "assets/img/banana.png");
         this.load.audio("correct", "assets/audio/correct-choice.mp3");
+        this.load.audio("incorrect", "assets/audio/incorrect-choice.mp3");
     }
 
     create() {
@@ -138,7 +140,8 @@ export default class level3 extends Phaser.Scene {
 
         let count: number = 0;
 
-        this.correct = this.sound.add("correct", { loop: false });
+        this.correct = this.sound.add("correct");
+        this.incorrect = this.sound.add("incorrect");
 
         //help button
         this.help = this.add.image(50, 35, "help").setInteractive();
@@ -264,6 +267,15 @@ export default class level3 extends Phaser.Scene {
 
         //default animal
         this.animal = this.add.image(350, 325, this.animals[0]);
+
+        let clicks = 0;
+        this.add.rectangle(175, 600, 300, 150, 0xFFFFF).setAlpha(0.000001).setInteractive().on("pointerup", () => {
+            clicks += 1;
+            if(clicks == 3){
+                this.incorrect.play();
+                this.scene.restart();
+            }
+        });
 
         //bananas
         this.banana1 = this.add
