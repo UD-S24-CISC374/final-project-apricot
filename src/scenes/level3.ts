@@ -1,8 +1,8 @@
 import Phaser from "phaser";
 
 export default class level3 extends Phaser.Scene {
-    private monkeys: Array<string>;
-    private monkey: Phaser.GameObjects.Image;
+    private animals: Array<string>;
+    private animal: Phaser.GameObjects.Image;
     private help: Phaser.GameObjects.Image;
     private popup: Phaser.GameObjects.Image;
     private flag: boolean;
@@ -13,48 +13,51 @@ export default class level3 extends Phaser.Scene {
     private container: Phaser.GameObjects.Container;
     private back: Phaser.GameObjects.Image;
     private correct: Phaser.Sound.BaseSound;
+    /**Used for the index of the animal to change */
     private index : number;
+
     private isHat: boolean;
     private options: Array<Phaser.GameObjects.Text>;
     private ifStatement: Phaser.GameObjects.Text;
+    private ifAction: Phaser.GameObjects.Text;
     private elseStatement: Phaser.GameObjects.Text;
-    private monkeyVals: Array<string>;
+    private elseAction: Phaser.GameObjects.Text;
+    /**
+     * The values of the animals in the order they appear in the animals array.
+     */
+    private animalTypes: Array<{type: string, color: string,
+                                attr1Name: string, attr1: string,
+                                attr2Name: string, attr2: string}>;
     private conditions: Array<{if:string,else:string}>;
+    private actions: Array<{if:string,else:string}>;
 
     constructor() {
         super({ key: "level3" });
-        this.monkeys = ["brown-pirate hat", "blue-hatless", "yellow-party hat"];
+        this.animals = ["brown-pirate hat", "blue-hatless", "yellow-party hat"];
         this.index = 0;
         this.isHat = false;
         this.options = [];
-        this.monkeyVals = ["brown", "hatless", "yellow", "pirate hat", "blue", "party hat"];
+        this.animalTypes = [{
+            type: "Monkey",
+            color: "brown",
+            attr1Name: "hat",
+            attr1: "pirate hat",
+            attr2Name: "canSwing",
+            attr2: "true"
+        }];
         //Add more conditions for more questions?
         this.conditions = [
             {
-                if:"if(monkey.hat == 'pirate hat'){", //Set Brown
-                else: "else if(monkey.color == 'blue'){"
-            },
-            {
-                if:"if(monkey.hat == 'pirate hat'){",
-                else: "else if(monkey.color == 'blue'){" // Set Hatless
-            },
-            {
-                if:"if(monkey.hat == 'party hat'){", // Set yellow
-                else: "else if(monkey.color == 'brown'){"
-            },
-            {
-                if: "if(monkey.hat == 'party hat'){",
-                else: "else{" // Set Pirate Hat
-            },
-            {
-                if: "if(monkey.hat == 'hatless'){", //Set blue
-                else: "else{"
-            },
-            {
-                if: "if(monkey.hat == 'Pirate hat'){",
-                else: "else{" // Set Party Hat
+                if:"If statement location", //Set Brown
+                else: "Else statement location"
             }
         ]
+        this.actions = [
+            {
+                if: "If statement action",
+                else: "else statement action"
+            }
+        ];
 }
 
     preload() {
@@ -122,10 +125,13 @@ export default class level3 extends Phaser.Scene {
         });
 
         //side boxes
-        this.add.rectangle(1000, 250, 600, 350, 0xffff);
-        this.add.rectangle(1000, 650, 600, 450, 0x9999);
+        this.add.rectangle(1000, 400, 600, 650, 0xffff);
+        this.add.rectangle(1000, 400, 600, 100, 0x9999);
 
         this.add.image(350, 325, "brown-pirate");
+        /**
+         * The origin locations of the text options to be dragged.
+         */
         const origin: Record<string, { x: number; y: number }> = {
             "brown": { x: 720, y: 500 },
             "blue": { x: 1000, y: 500 },
@@ -134,50 +140,74 @@ export default class level3 extends Phaser.Scene {
             "hatless": { x: 720, y: 600 },
             "party hat": { x: 1000, y: 600 }
         };
-        let brown = this.add.text(720, 500, "brown", { fontSize: "42px" }).setInteractive();
-        let pirateHat = this.add.text(720, 550, "pirate hat", { fontSize: "42px" }).setInteractive();
-        let blue = this.add.text(1000, 500, "blue", { fontSize: "42px" }).setInteractive();
-        let yellow = this.add.text(1000, 550, "yellow", { fontSize: "42px" }).setInteractive();
-        let hatless = this.add.text(720, 600, "hatless", { fontSize: "42px" }).setInteractive();
-        let partyHat = this.add.text(1000, 600, "party hat", { fontSize: "42px" }).setInteractive();
-        this.options = [brown, blue, pirateHat, yellow, hatless, partyHat];
-        this.input.setDraggable(brown,true);
-        this.input.setDraggable(blue,true);
-        this.input.setDraggable(pirateHat,true);
-        this.input.setDraggable(yellow,true);
-        this.input.setDraggable(hatless,true);
-        this.input.setDraggable(partyHat,true);
-
-        //default monkey
-        this.monkey = this.add.image(350, 325, this.monkeys[0]);
-
+        //These are the main if statement locations, altered based on current status of level
         this.ifStatement = this.add.text(720, 100, this.conditions[0].if, {
-            fontSize: "24px",
+            fontSize: "20px",
             color: "black",
         });
-        this.add.text(770, 150, "this.color = ", {
-            fontSize: "22px",
+        this.ifAction = this.add.text(770, 150, this.actions[0].if, {
+            fontSize: "20px",
             color: "black",
         });
-        this.add.text(725, 190, "}", {
-            fontSize: "24px",
+        this.add.text(725, 180, "}", {
+            fontSize: "20px",
             color: "black",
         });
-        this.elseStatement = this.add.text(720, 230, this.conditions[0].else, {
-            fontSize: "24px",
+        this.elseStatement = this.add.text(720, 220, this.conditions[0].else, {
+            fontSize: "20px",
             color: "black",
         });
-        this.add.text(770, 280, "this.hat = ", {
-            fontSize: "24px",
+        this.elseAction = this.add.text(770, 260, this.actions[0].else, {
+            fontSize: "20px",
             color: "black",
         });
-        this.add.text(725, 320, "}", {
-            fontSize: "24px",
+        this.add.text(725, 300, "}", {
+            fontSize: "20px",
             color: "black",
         });
+
+        //This is the animal class that is used for the Super class of the animals
+        this.add.text(850, 360, "class Animal(color){", {
+            fontSize: "18px",
+            color: "black",
+        });
+        this.add.text(900, 390, "this.color = color;", {
+            fontSize: "18px",
+            color: "black",
+        });
+        this.add.text(850, 420, "}", {
+            fontSize: "18px",
+            color: "black",
+        });
+
+        //These are the classes for the different types of animals
+        this.add.text(720, 470, `Class ${this.animalTypes[0].type} extends Animal{`, {
+            fontSize: "20px",
+            color: "black",
+        });
+        this.add.text(770, 500, `super("${this.animalTypes[0].color}");`, {
+            fontSize: "20px",
+            color: "black",
+        });
+        this.add.text(770, 530, `this.${this.animalTypes[0].attr1Name} = "${this.animalTypes[0].attr1}";`, {
+            fontSize: "20px",
+            color: "black",
+        });
+        this.add.text(770, 560, `this.${this.animalTypes[0].attr2Name} = ${this.animalTypes[0].attr2};`, {
+            fontSize: "20px",
+            color: "black",
+        });
+        this.add.text(720, 590, "}", {
+            fontSize: "20px",
+            color: "black",
+        });
+
+
+        //default animal
+        this.animal = this.add.image(350, 325, this.animals[0]);
 
         //drop zones
-        const dropZoneColor: Phaser.GameObjects.Zone = this.add
+        /* const dropZoneColor: Phaser.GameObjects.Zone = this.add
             .zone(1010, 165, 150, 50)
             .setRectangleDropZone(250, 50)
             .setInteractive();
@@ -270,15 +300,15 @@ export default class level3 extends Phaser.Scene {
                 gameObject.y = dropZone.y - 25;
 
                 if (
-                    (gameObject.text == this.monkeyVals[this.index] && dropZone == dropZoneColor && !this.isHat) ||
-                    (gameObject.text == this.monkeyVals[this.index] && dropZone == dropZoneHat && this.isHat)
+                    (gameObject.text == this.animalVals[this.index] && dropZone == dropZoneColor && !this.isHat) ||
+                    (gameObject.text == this.animalVals[this.index] && dropZone == dropZoneHat && this.isHat)
                 ) {
                     gameObject.setColor("green");
                     this.correct.play();
                     this.options.map((option) => {
                         option.setColor("white");
                     });
-                    this.changeMonkey(gameObject);
+                    this.changeanimal(gameObject);
                     gameObject.destroy();
 
                     graphics.clear();
@@ -295,7 +325,7 @@ export default class level3 extends Phaser.Scene {
                 else{
                     gameObject.setColor("red");
                     console.log(gameObject.text);
-                    console.log(this.monkeyVals[this.index]);
+                    console.log(this.animalVals[this.index]);
                     console.log(dropZone);
                     console.log(this.isHat);
                     gameObject.x = origin[gameObject.text as keyof typeof origin].x;
@@ -339,7 +369,7 @@ export default class level3 extends Phaser.Scene {
                     );
                 }
             }
-        );
+        ); */
 
         this.generatePopUp();
     }
@@ -363,7 +393,9 @@ export default class level3 extends Phaser.Scene {
         this.p1 = this.add.text(
             290,
             275,
-            "In this level, we'll be working with conditionals. You'll be given a monkey and depending on the condition, you'll need to drag the correct descriptive word to the correct drop zone.",
+            `In this level, you will have to use the skills you learned in level 1 and 2 to solve the challenges.
+            
+            You will get an animal and a condition, you will have to complete the correct action to pass the level`,
             {
                 fontSize: "16px",
                 color: "black",
@@ -373,8 +405,9 @@ export default class level3 extends Phaser.Scene {
         );
         this.p2 = this.add.text(
             290,
-            350,
-            "The keyword 'this' refers to the object referenced, so for us that is the monkey on the screen",
+            375,
+            `This time, we're introducing class inheritance. We do that by making a new super class with fields that other classes have in common.
+            The other classes will 'extend' the super class and add their own unique fields, but they keep the fields from the super class.`,
             {
                 fontSize: "16px",
                 color: "black",
@@ -383,7 +416,7 @@ export default class level3 extends Phaser.Scene {
             }
         );
         this.destroy = this.add
-            .text(575, 450, "CLOSE", {
+            .text(575, 500, "CLOSE", {
                 fontSize: "32px",
                 color: "blue",
                 align: "center",
@@ -410,12 +443,12 @@ export default class level3 extends Phaser.Scene {
         ]);
     }
     /**
-     * @param old The old monkey that was on the screen, will be destroyed.
-     * This function changes the monkey on the screen to the next monkey in the list.
+     * @param old The old animal that was on the screen, will be destroyed.
+     * This function changes the animal on the screen to the next animal in the list.
      */
-    changeMonkey(old: Phaser.GameObjects.Text) {
+    changeanimal(old: Phaser.GameObjects.Text) {
         if (this.index < this.conditions.length-1) {
-            this.monkey.destroy();
+            this.animal.destroy();
             this.isHat = !this.isHat;
             let temp: Array<Phaser.GameObjects.Text> = [];
             this.options.map((option) => {
@@ -424,7 +457,7 @@ export default class level3 extends Phaser.Scene {
             this.options = temp;
             this.index++;
             this.changeCondition();
-            this.monkey = this.add.image(350, 325, this.monkeys[this.index % 3]);
+            this.animal = this.add.image(350, 325, this.animals[this.index % 3]);
                         
         } else {
             this.popup = this.add

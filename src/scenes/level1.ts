@@ -50,7 +50,7 @@ export default class level1 extends Phaser.Scene {
         this.add.image(350, 360, "background");
         this.add.rectangle(640, 0, 1280, 150, 0x0000);
 
-        this.add.text(545, 10, "Level 1x", {
+        this.add.text(545, 10, "Level 1", {
             fontSize: "48px",
         });
         
