@@ -290,6 +290,12 @@ export default class level3 extends Phaser.Scene {
                 }
             });
 
+            //sloth box
+            this.add
+                .rectangle(125, 250, 200, 300, 0xfffff)
+                .setAlpha(0.00001)
+                .setInteractive();
+
         //bananas
         this.banana1 = this.add
             .image(150, 200, "banana")
