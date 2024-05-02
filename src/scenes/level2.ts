@@ -32,6 +32,13 @@ export default class level2 extends Phaser.Scene {
 
     constructor() {
         super({ key: "level2" });
+        this.defaultValues();
+    }
+    /**
+     * This function sets the default values for the level.
+     * By setting them in a function like this, they reset when the level is restarted.
+     */
+    defaultValues(){
         this.monkeys = ["brown-pirate hat", "blue-hatless", "yellow-party hat"];
         this.index = 0;
         this.isHat = false;
@@ -100,6 +107,8 @@ export default class level2 extends Phaser.Scene {
     create(collectables: Record<string, boolean>) {
         //background + header
         this.add.image(350, 360, "background");
+        console.log("Create")
+        this.defaultValues();
         this.add.rectangle(640, 0, 1280, 150, 0x0000);
 
         this.add.text(545, 10, "Level 2", {
