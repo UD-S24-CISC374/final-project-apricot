@@ -50,7 +50,6 @@ export default class level2 extends Phaser.Scene {
      * By setting them in a function like this, they reset when the level is restarted.
      */
     defaultValues(){
-        console.log("Default Values")
         this.monkeys = ["brown-pirate hat", "blue-hatless", "yellow-party hat"];
         this.index = 0;
         this.isHat = false;

@@ -40,7 +40,7 @@ export default class level3 extends Phaser.Scene {
         this.defaultValues();
 }
     defaultValues(){
-        this.animals = ["brown-pirate hat", "blue-hatless", "yellow-party hat"];
+        this.animals = ["brown-pirate hat", "parrot", "sloth"];
         this.index = 0;
         this.isHat = false;
         this.options = [];
@@ -59,6 +59,14 @@ export default class level3 extends Phaser.Scene {
                 attr1Name: "this.canSpeak",
                 attr1: "true;",
                 attr2Name: "this.canFly",
+                attr2: "true;"
+            },
+            {
+                type: "Class Sloth extends Animal{",
+                color: `super("tan");`,
+                attr1Name: "clawCount",
+                attr1: "6;",
+                attr2Name: "this.isLazy",
                 attr2: "true;"
             }
         ];
@@ -462,8 +470,8 @@ export default class level3 extends Phaser.Scene {
      * @param old The old animal that was on the screen, will be destroyed.
      * This function changes the animal on the screen to the next animal in the list.
      */
-    changeanimal(old: Phaser.GameObjects.Text) {
-        if (this.index < this.conditions.length-1) {
+    changeanimal() {
+        if (this.index < this.animals.length-1) {
             this.animal.destroy();
             this.index++;
             this.changeText();
@@ -522,7 +530,7 @@ export default class level3 extends Phaser.Scene {
         }
     }
     /**
-     * This function changes the text of the conditions to different ones.
+     * This function changes the text of the of the activity to different ones.
      */
     changeText(): void {
         if(this.index < this.conditions.length){
