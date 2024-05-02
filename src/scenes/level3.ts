@@ -303,45 +303,6 @@ export default class level3 extends Phaser.Scene {
                 }
             });
 
-        //coconuts
-        if (this.animal.texture.key == "parrot2") {
-            this.coconut1 = this.add
-                .image(150, 200, "coconut")
-                .setScale(0.5)
-                .setInteractive()
-                .on("pointerup", () => {
-                    this.correct.play();
-                    this.coconut1.destroy();
-                    count += 1;
-                    if (count == 3) {
-                        this.changeAnimal();
-                    }
-                });
-            this.coconut2 = this.add
-                .image(450, 675, "coconut")
-                .setScale(0.5)
-                .setInteractive()
-                .on("pointerup", () => {
-                    this.correct.play();
-                    this.coconut2.destroy();
-                    count += 1;
-                    if (count == 3) {
-                        this.changeAnimal();
-                    }
-                });
-            this.coconut3 = this.add
-                .image(650, 300, "coconut")
-                .setScale(0.5)
-                .setInteractive()
-                .on("pointerup", () => {
-                    this.correct.play();
-                    this.coconut3.destroy();
-                    count += 1;
-                    if (count == 3) {
-                        this.changeAnimal();
-                    }
-                });
-        }
 
         //drop zones
         /* const dropZoneColor: Phaser.GameObjects.Zone = this.add
@@ -589,6 +550,46 @@ export default class level3 extends Phaser.Scene {
             this.index++;
             this.changeText();
             this.animal = this.add.image(350, 325, this.animals[this.index]);
+            //coconuts
+            let count: number = 0;
+            if (this.animal.texture.key == "parrot2") {
+                this.coconut1 = this.add
+                    .image(150, 200, "coconut")
+                    .setScale(0.5)
+                    .setInteractive()
+                    .on("pointerup", () => {
+                        this.correct.play();
+                        this.coconut1.destroy();
+                        count += 1;
+                        if (count == 3) {
+                            this.changeAnimal();
+                        }
+                    });
+                this.coconut2 = this.add
+                    .image(450, 675, "coconut")
+                    .setScale(0.5)
+                    .setInteractive()
+                    .on("pointerup", () => {
+                        this.correct.play();
+                        this.coconut2.destroy();
+                        count += 1;
+                        if (count == 3) {
+                            this.changeAnimal();
+                        }
+                    });
+                this.coconut3 = this.add
+                    .image(650, 300, "coconut")
+                    .setScale(0.5)
+                    .setInteractive()
+                    .on("pointerup", () => {
+                        this.correct.play();
+                        this.coconut3.destroy();
+                        count += 1;
+                        if (count == 3) {
+                            this.changeAnimal();
+                        }
+                    });
+            }
         } else {
             this.popup = this.add
                 .image(225, 125, "popup")
