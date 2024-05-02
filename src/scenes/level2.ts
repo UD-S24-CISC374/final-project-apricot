@@ -126,7 +126,7 @@ export default class level2 extends Phaser.Scene {
             this.back.setAlpha(0.7);
         });
         this.back.on("pointerup", () => {
-            this.scene.stop("level2").launch("titleScene");
+            this.scene.stop("level2").resume("titleScene");
         });
 
         //side boxes

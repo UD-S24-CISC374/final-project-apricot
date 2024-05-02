@@ -22,6 +22,7 @@ export default class level3 extends Phaser.Scene {
     private banana3: Phaser.GameObjects.Image;
     /**Used for the index of the animal to change */
     private index: number;
+    private count: number;
 
     private isHat: boolean;
     private options: Array<Phaser.GameObjects.Text>;
@@ -54,6 +55,7 @@ export default class level3 extends Phaser.Scene {
     defaultValues() {
         this.animals = ["brown-pirate hat", "parrot2", "sloth"];
         this.index = 0;
+        this.count = 0;
         this.isHat = false;
         this.options = [];
         this.animalTypes = [
@@ -138,8 +140,6 @@ export default class level3 extends Phaser.Scene {
             fontSize: "48px",
         });
 
-        let count: number = 0;
-
         this.correct = this.sound.add("correct");
         this.incorrect = this.sound.add("incorrect");
 
@@ -173,7 +173,7 @@ export default class level3 extends Phaser.Scene {
             this.back.setAlpha(0.7);
         });
         this.back.on("pointerup", () => {
-            this.scene.stop("level2").launch("titleScene");
+            this.scene.stop("level3").resume("titleScene");
         });
 
         //side boxes
@@ -276,7 +276,7 @@ export default class level3 extends Phaser.Scene {
                 this.scene.restart();
             }
         });
-
+        
         //bananas
         this.banana1 = this.add
             .image(150, 200, "banana")
@@ -285,8 +285,8 @@ export default class level3 extends Phaser.Scene {
             .on("pointerup", () => {
                 this.correct.play();
                 this.banana1.destroy();
-                count += 1;
-                if (count == 3) {
+                this.count += 1;
+                if (this.count == 3) {
                     this.changeAnimal();
                 }
             });
@@ -297,8 +297,8 @@ export default class level3 extends Phaser.Scene {
             .on("pointerup", () => {
                 this.correct.play();
                 this.banana2.destroy();
-                count += 1;
-                if (count == 3) {
+                this.count += 1;
+                if (this.count == 3) {
                     this.changeAnimal();
                 }
             });
@@ -309,11 +309,52 @@ export default class level3 extends Phaser.Scene {
             .on("pointerup", () => {
                 this.correct.play();
                 this.banana3.destroy();
-                count += 1;
-                if (count == 3) {
+                this.count += 1;
+                if (this.count == 3) {
                     this.changeAnimal();
                 }
             });
+
+        //coconuts
+                this.coconut1 = this.add
+                    .image(150, 200, "coconut")
+                    .setScale(0.5)
+                    .setVisible(false)
+                    .setInteractive()
+                    .on("pointerup", () => {
+                        this.correct.play();
+                        this.coconut1.destroy();
+                        this.count += 1;
+                        if (this.count == 3) {
+                            this.changeAnimal();
+                        }
+                    });
+                this.coconut2 = this.add
+                    .image(450, 675, "coconut")
+                    .setScale(0.5)
+                    .setVisible(false)
+                    .setInteractive()
+                    .on("pointerup", () => {
+                        this.correct.play();
+                        this.coconut2.destroy();
+                        this.count += 1;
+                        if (this.count == 3) {
+                            this.changeAnimal();
+                        }
+                    });
+                this.coconut3 = this.add
+                    .image(650, 300, "coconut")
+                    .setScale(0.5)
+                    .setVisible(false)
+                    .setInteractive()
+                    .on("pointerup", () => {
+                        this.correct.play();
+                        this.coconut3.destroy();
+                        this.count += 1;
+                        if (this.count == 3) {
+                            this.changeAnimal();
+                        }
+                    });
 
 
         //drop zones
@@ -563,44 +604,11 @@ export default class level3 extends Phaser.Scene {
             this.changeText();
             this.animal = this.add.image(350, 325, this.animals[this.index]);
             //coconuts
-            let count: number = 0;
             if (this.animal.texture.key == "parrot2") {
-                this.coconut1 = this.add
-                    .image(150, 200, "coconut")
-                    .setScale(0.5)
-                    .setInteractive()
-                    .on("pointerup", () => {
-                        this.correct.play();
-                        this.coconut1.destroy();
-                        count += 1;
-                        if (count == 3) {
-                            this.changeAnimal();
-                        }
-                    });
-                this.coconut2 = this.add
-                    .image(450, 675, "coconut")
-                    .setScale(0.5)
-                    .setInteractive()
-                    .on("pointerup", () => {
-                        this.correct.play();
-                        this.coconut2.destroy();
-                        count += 1;
-                        if (count == 3) {
-                            this.changeAnimal();
-                        }
-                    });
-                this.coconut3 = this.add
-                    .image(650, 300, "coconut")
-                    .setScale(0.5)
-                    .setInteractive()
-                    .on("pointerup", () => {
-                        this.correct.play();
-                        this.coconut3.destroy();
-                        count += 1;
-                        if (count == 3) {
-                            this.changeAnimal();
-                        }
-                    });
+                this.count = 0;
+                this.coconut1.setVisible(true);
+                this.coconut2.setVisible(true);
+                this.coconut3.setVisible(true);
             }
         } else {
             this.popup = this.add
@@ -677,5 +685,6 @@ export default class level3 extends Phaser.Scene {
         }
     }
 
-    update() {}
+    update() {
+    }
 }

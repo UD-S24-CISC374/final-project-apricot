@@ -59,7 +59,7 @@ export default class titleScene extends Phaser.Scene {
         });
         this.start2.on("pointerup", () => {
             //this.scene.pause("titleScene").launch("level1", collectables);
-            this.scene.start("level3");
+            this.scene.pause("titleScene").launch("level3");
         });
 
         //collectables
