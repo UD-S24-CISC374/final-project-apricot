@@ -37,14 +37,24 @@ export default class level3 extends Phaser.Scene {
         this.index = 0;
         this.isHat = false;
         this.options = [];
-        this.animalTypes = [{
-            type: "Monkey",
-            color: "brown",
-            attr1Name: "hat",
-            attr1: "pirate hat",
-            attr2Name: "canSwing",
-            attr2: "true"
-        }];
+        this.animalTypes = [
+            {
+                type: "Monkey",
+                color: "brown",
+                attr1Name: "hat",
+                attr1: "pirate hat",
+                attr2Name: "canSwing",
+                attr2: "true"
+            },
+            {
+                type: "Parrot",
+                color: "MultiColor",
+                attr1Name: "multiColor",
+                attr1: "true",
+                attr2Name: "canFly",
+                attr2: "true"
+            }
+        ];
         //Add more conditions for more questions?
         this.conditions = [
             {
@@ -85,7 +95,7 @@ export default class level3 extends Phaser.Scene {
         this.add.image(350, 360, "background");
         this.add.rectangle(640, 0, 1280, 150, 0x0000);
 
-        this.add.text(545, 10, "Level 2", {
+        this.add.text(545, 10, "Level 3", {
             fontSize: "48px",
         });
         
@@ -384,7 +394,7 @@ export default class level3 extends Phaser.Scene {
         this.title = this.add.text(
             290,
             200,
-            "Welcome to Level 2 of Jungle Quest!",
+            "Welcome to Level 3 of Jungle Quest!",
             {
                 fontSize: "32px",
                 color: "black",
