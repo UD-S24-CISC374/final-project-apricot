@@ -630,7 +630,7 @@ export default class level2 extends Phaser.Scene {
             this.destroy.on("pointerup", () => {
                 this.clock.stop();
                 this.container.destroy();
-                this.scene.stop("level2").resume("titleScene");
+                this.scene.stop("level2").launch("level3");
             });
 
             this.container = this.add.container(0, 0, [
