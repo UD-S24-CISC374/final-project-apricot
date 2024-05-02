@@ -293,19 +293,10 @@ export default class level3 extends Phaser.Scene {
             //sloth box
 
         //bananas
-        this.banana1 = this.add
-            .image(150, 200, "banana")
-            .setScale(0.5)
+        const dropZoneSloth: Phaser.GameObjects.Zone = this.add
+            .zone(125, 250, 200, 300)
+            .setRectangleDropZone(200, 300)
             .setInteractive();
-        this.banana2 = this.add
-            .image(450, 675, "banana")
-            .setScale(0.5)
-            .setInteractive();
-        this.banana3 = this.add
-            .image(650, 300, "banana")
-            .setScale(0.5)
-            .setInteractive();
-
         //coconuts
         this.coconut1 = this.add
             .image(150, 200, "coconut")
@@ -346,6 +337,18 @@ export default class level3 extends Phaser.Scene {
                     this.changeAnimal();
                 }
             });
+        this.banana1 = this.add
+            .image(150, 200, "banana")
+            .setScale(0.5)
+            .setInteractive();
+        this.banana2 = this.add
+            .image(450, 675, "banana")
+            .setScale(0.5)
+            .setInteractive();
+        this.banana3 = this.add
+            .image(650, 300, "banana")
+            .setScale(0.5)
+            .setInteractive();
 
         this.input.setDraggable(this.banana1);
         this.input.setDraggable(this.banana2);
@@ -356,10 +359,7 @@ export default class level3 extends Phaser.Scene {
             .setRectangleDropZone(100, 200)
             .setInteractive();
 
-        const dropZoneSloth: Phaser.GameObjects.Zone = this.add
-            .zone(125, 250, 200, 300)
-            .setRectangleDropZone(200, 300)
-            .setInteractive();
+
 
         //drag and drop
         this.input.on(
@@ -386,18 +386,17 @@ export default class level3 extends Phaser.Scene {
                 if (gameObject == this.banana1 && dropZone == dropZoneMonkey) {
                     this.banana1.destroy();
                     this.count += 1;
-                } else if (
-                    gameObject == this.banana2 &&
-                    dropZone == dropZoneMonkey
-                ) {
+                    console.log(this.count);
+                } 
+                else if (gameObject == this.banana2 && dropZone == dropZoneMonkey) {
                     this.banana2.destroy();
                     this.count += 1;
-                } else if (
-                    gameObject == this.banana3 &&
-                    dropZone == dropZoneMonkey
-                ) {
+                    console.log(this.count);
+                }
+                else if (gameObject == this.banana3 && dropZone == dropZoneMonkey){
                     this.banana3.destroy();
                     this.count += 1;
+                    console.log(this.count);
                 }
                 if (this.count == 3) {
                     this.correct.play();
@@ -494,6 +493,11 @@ export default class level3 extends Phaser.Scene {
                 this.coconut2.setVisible(true);
                 this.coconut3.setVisible(true);
             }
+            else if(this.animal.texture.key == "sloth"){
+                console.log("SOTH")
+                this.animal.setInteractive();
+                this.input.setDraggable(this.animal);
+            }
         } else {
             this.popup = this.add
                 .image(225, 125, "popup")
@@ -511,7 +515,7 @@ export default class level3 extends Phaser.Scene {
             this.p1 = this.add.text(
                 290,
                 275,
-                "The next level hasn't been implemented yet, so click NEXT to go to the title page.",
+                "Congrats on finishing, now go back to the title screen to play again or look at your collectables",
                 {
                     fontSize: "16px",
                     color: "black",
