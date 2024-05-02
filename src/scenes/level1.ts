@@ -15,6 +15,9 @@ export default class level1 extends Phaser.Scene {
     private correct: Phaser.Sound.BaseSound;
     private rock: Phaser.GameObjects.Image;
     private parrot: Phaser.GameObjects.Image;
+    private star1: Phaser.GameObjects.Image;
+    private star2: Phaser.GameObjects.Image;
+    private star3: Phaser.GameObjects.Image;
     private screech: Phaser.Sound.BaseSound;
     private impact: Phaser.Sound.BaseSound;
 
@@ -40,6 +43,8 @@ export default class level1 extends Phaser.Scene {
         );
         this.load.image("help", "assets/img/help-64.png");
         this.load.image("popup", "assets/img/popup.png");
+        this.load.image("gold-star", "assets/img/gold-star.png");
+        this.load.image("empty-star", "assets/img/empty-star.png");
         this.load.audio("correct", "assets/audio/correct-choice.mp3");
         this.load.audio("screech", "assets/audio/screech.wav");
         this.load.audio("impact", "assets/audio/rock.wav");
@@ -53,7 +58,7 @@ export default class level1 extends Phaser.Scene {
         this.add.text(545, 10, "Level 1x", {
             fontSize: "48px",
         });
-        
+
         this.correct = this.sound.add("correct", { loop: false });
         this.screech = this.sound.add("screech", { loop: false });
         this.impact = this.sound.add("impact", { loop: false });
@@ -445,18 +450,62 @@ export default class level1 extends Phaser.Scene {
                 .setOrigin(0)
                 .setScale(1.25);
             this.title = this.add.text(
-                290,
+                300,
                 200,
                 "Congrats! You did it! Great job!",
                 {
                     fontSize: "32px",
                     color: "black",
+                    align: "center",
                 }
             );
+
+            if (this.time.now < 10000) {
+                this.star1 = this.add
+                    .image(400, 350, "gold-star")
+                    .setScale(0.5);
+                this.star2 = this.add
+                    .image(600, 350, "gold-star")
+                    .setScale(0.5);
+                this.star3 = this.add
+                    .image(800, 350, "gold-star")
+                    .setScale(0.5);
+            } else if (this.time.now < 15000) {
+                this.star1 = this.add
+                    .image(400, 350, "gold-star")
+                    .setScale(0.5);
+                this.star2 = this.add
+                    .image(600, 350, "gold-star")
+                    .setScale(0.5);
+                this.star3 = this.add
+                    .image(800, 350, "empty-star")
+                    .setScale(0.5);
+            } else if (this.time.now < 20000) {
+                this.star1 = this.add
+                    .image(400, 350, "gold-star")
+                    .setScale(0.5);
+                this.star2 = this.add
+                    .image(600, 350, "empty-star")
+                    .setScale(0.5);
+                this.star3 = this.add
+                    .image(800, 350, "empty-star")
+                    .setScale(0.5);
+            } else {
+                this.star1 = this.add
+                    .image(400, 350, "empty-star")
+                    .setScale(0.5);
+                this.star2 = this.add
+                    .image(600, 350, "empty-star")
+                    .setScale(0.5);
+                this.star3 = this.add
+                    .image(800, 350, "empty-star")
+                    .setScale(0.5);
+            }
+
             this.p1 = this.add.text(
                 290,
-                275,
-                "The next level is ready and waiting, so click NEXT to go to level 2.",
+                475,
+                "The next level is waiting for you, click NEXT to continue onwards.",
                 {
                     fontSize: "16px",
                     color: "black",
@@ -487,6 +536,9 @@ export default class level1 extends Phaser.Scene {
                 this.popup,
                 this.title,
                 this.p1,
+                this.star1,
+                this.star2,
+                this.star3,
                 this.destroy,
             ]);
         }
