@@ -58,13 +58,11 @@ export default class titleScene extends Phaser.Scene {
             this.start2.setVisible(false);
         });
         this.start2.on("pointerup", () => {
-            this.scene.pause("titleScene").launch("level1", collectables);
+            this.scene.pause("titleScene").launch("level1", {collectables: collectables});
         });
 
         //collectables
-        this.collect = this.add
-            .image(800, 550, "collect")
-            .setInteractive();
+        this.collect = this.add.image(800, 550, "collect").setInteractive();
         this.collect2 = this.add
             .image(800, 550, "collect2")
             .setVisible(false)

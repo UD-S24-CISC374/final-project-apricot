@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import Clock from 'phaser3-rex-plugins/plugins/clock';
 
 export default class level1 extends Phaser.Scene {
     private monkeys: Array<string>;
@@ -18,6 +19,7 @@ export default class level1 extends Phaser.Scene {
     private star1: Phaser.GameObjects.Image;
     private star2: Phaser.GameObjects.Image;
     private star3: Phaser.GameObjects.Image;
+    private clock: Clock;
     private screech: Phaser.Sound.BaseSound;
     private impact: Phaser.Sound.BaseSound;
 
@@ -55,9 +57,12 @@ export default class level1 extends Phaser.Scene {
         this.add.image(350, 360, "background");
         this.add.rectangle(640, 0, 1280, 150, 0x0000);
 
-        this.add.text(545, 10, "Level 1x", {
+        this.add.text(545, 10, "Level 1", {
             fontSize: "48px",
         });
+
+        this.clock = new Clock(this, {});
+        this.clock.start();
 
         this.correct = this.sound.add("correct", { loop: false });
         this.screech = this.sound.add("screech", { loop: false });
@@ -93,6 +98,7 @@ export default class level1 extends Phaser.Scene {
             this.back.setAlpha(0.7);
         });
         this.back.on("pointerup", () => {
+            this.clock.stop();
             this.scene.stop("level1").resume("titleScene", collectables);
         });
 
@@ -267,7 +273,7 @@ export default class level1 extends Phaser.Scene {
                         if (gameObject.input && temp) {
                             gameObject.destroy();
                             temp.destroy();
-                            this.changeMonkey();
+                            this.changeMonkey(collectables);
                             flag = false;
                         }
                     }
@@ -439,7 +445,7 @@ export default class level1 extends Phaser.Scene {
         ]);
     }
 
-    changeMonkey() {
+    changeMonkey(collectables: Record<string, boolean>) {
         let index: number = this.monkeys.indexOf(this.monkey.texture.key) + 1;
         if (index < 3) {
             this.monkey.destroy();
@@ -460,7 +466,7 @@ export default class level1 extends Phaser.Scene {
                 }
             );
 
-            if (this.time.now < 10000) {
+            if (this.clock.now < 10000) {
                 this.star1 = this.add
                     .image(400, 350, "gold-star")
                     .setScale(0.5);
@@ -470,7 +476,7 @@ export default class level1 extends Phaser.Scene {
                 this.star3 = this.add
                     .image(800, 350, "gold-star")
                     .setScale(0.5);
-            } else if (this.time.now < 15000) {
+            } else if (this.clock.now < 15000) {
                 this.star1 = this.add
                     .image(400, 350, "gold-star")
                     .setScale(0.5);
@@ -480,7 +486,7 @@ export default class level1 extends Phaser.Scene {
                 this.star3 = this.add
                     .image(800, 350, "empty-star")
                     .setScale(0.5);
-            } else if (this.time.now < 20000) {
+            } else if (this.clock.now < 20000) {
                 this.star1 = this.add
                     .image(400, 350, "gold-star")
                     .setScale(0.5);
@@ -528,8 +534,9 @@ export default class level1 extends Phaser.Scene {
                 this.destroy.setColor("blue");
             });
             this.destroy.on("pointerup", () => {
+                this.clock.stop();
                 this.container.destroy();
-                this.scene.stop("level1").launch("level2");
+                this.scene.stop("level1").launch("level2", {collectables: collectables});
             });
 
             this.container = this.add.container(0, 0, [
