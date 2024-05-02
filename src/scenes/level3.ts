@@ -292,6 +292,11 @@ export default class level3 extends Phaser.Scene {
             .setScale(0.5)
             .setInteractive()
 
+
+
+        this.input.setDraggable(this.banana1);
+        this.input.setDraggable(this.banana2);
+        this.input.setDraggable(this.banana3);
         //drop zones
         const dropZoneMonkey: Phaser.GameObjects.Zone = this.add
             .zone(350, 325, 100, 100)
@@ -307,7 +312,6 @@ export default class level3 extends Phaser.Scene {
         this.input.on("drop", (pointer: Phaser.Input.Pointer, gameObject: {x:number, y: number}, dropZone: Phaser.GameObjects.Zone) => {
             gameObject.x = dropZone.x;
             gameObject.y = dropZone.y;
-            let count = 0;
             if (gameObject == this.banana1 && dropZone == dropZoneMonkey) {
                 this.banana1.destroy();
                 count += 1;
