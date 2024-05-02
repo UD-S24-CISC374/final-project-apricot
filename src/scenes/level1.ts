@@ -19,6 +19,7 @@ export default class level1 extends Phaser.Scene {
     private star1: Phaser.GameObjects.Image;
     private star2: Phaser.GameObjects.Image;
     private star3: Phaser.GameObjects.Image;
+    private reset: Phaser.GameObjects.Image;
     private clock: Clock;
     private screech: Phaser.Sound.BaseSound;
     private impact: Phaser.Sound.BaseSound;
@@ -47,6 +48,7 @@ export default class level1 extends Phaser.Scene {
         this.load.image("popup", "assets/img/popup.png");
         this.load.image("gold-star", "assets/img/gold-star.png");
         this.load.image("empty-star", "assets/img/empty-star.png");
+        this.load.image("reset", "assets/img/reset.png");
         this.load.audio("correct", "assets/audio/correct-choice.mp3");
         this.load.audio("screech", "assets/audio/screech.wav");
         this.load.audio("impact", "assets/audio/rock.wav");
@@ -100,6 +102,21 @@ export default class level1 extends Phaser.Scene {
         this.back.on("pointerup", () => {
             this.clock.stop();
             this.scene.stop("level1").resume("titleScene", collectables);
+        });
+
+        //reset button
+        this.reset = this.add.image(230, 33, "reset").setInteractive();
+        this.reset.scale = 0.3;
+        this.reset.setAlpha(0.7);
+        this.reset.on("pointerover", () => {
+            this.reset.setAlpha(1);
+        });
+        this.reset.on("pointerout", () => {
+            this.reset.setAlpha(0.7);
+        });
+        this.reset.on("pointerup", () => {
+            this.clock.stop();
+            this.scene.restart({firstTry: false});
         });
 
         //side boxes
@@ -409,7 +426,7 @@ export default class level1 extends Phaser.Scene {
         this.p2 = this.add.text(
             290,
             350,
-            "Fill in the blanks by dragging the correct descriptive word. If you make a mistake, click the back button to return to the main menu and try again.",
+            "Fill in the blanks by dragging the correct descriptive word. If you make a mistake, click the reset button to refresh the level and try again.",
             {
                 fontSize: "16px",
                 color: "black",
@@ -536,7 +553,9 @@ export default class level1 extends Phaser.Scene {
             this.destroy.on("pointerup", () => {
                 this.clock.stop();
                 this.container.destroy();
-                this.scene.stop("level1").launch("level2", {collectables: collectables});
+                this.scene
+                    .stop("level1")
+                    .launch("level2", { collectables: collectables });
             });
 
             this.container = this.add.container(0, 0, [

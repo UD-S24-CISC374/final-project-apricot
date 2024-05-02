@@ -24,6 +24,7 @@ export default class level2 extends Phaser.Scene {
     private star1: Phaser.GameObjects.Image;
     private star2: Phaser.GameObjects.Image;
     private star3: Phaser.GameObjects.Image;
+    private reset: Phaser.GameObjects.Image;
     private clock: Clock;
 
     constructor() {
@@ -89,6 +90,7 @@ export default class level2 extends Phaser.Scene {
         this.load.audio("correct", "assets/audio/correct-choice.mp3");
         this.load.image("gold-star", "assets/img/gold-star.png");
         this.load.image("empty-star", "assets/img/empty-star.png");
+        this.load.image("reset", "assets/img/reset.png");
     }
 
     create(collectables: Record<string, boolean>) {
@@ -137,6 +139,21 @@ export default class level2 extends Phaser.Scene {
         this.back.on("pointerup", () => {
             this.clock.stop();
             this.scene.stop("level2").resume("titleScene");
+        });
+
+        //reset button
+        this.reset = this.add.image(230, 33, "reset").setInteractive();
+        this.reset.scale = 0.3;
+        this.reset.setAlpha(0.7);
+        this.reset.on("pointerover", () => {
+            this.reset.setAlpha(1);
+        });
+        this.reset.on("pointerout", () => {
+            this.reset.setAlpha(0.7);
+        });
+        this.reset.on("pointerup", () => {
+            this.clock.stop();
+            this.scene.restart();
         });
 
         //side boxes
@@ -402,7 +419,7 @@ export default class level2 extends Phaser.Scene {
         this.p1 = this.add.text(
             290,
             275,
-            "In this level, we'll be working with conditionals. You'll be given a monkey and depending on the condition, you'll need to drag the correct descriptive word to the correct drop zone.",
+            "In this level, we'll be working with conditionals. Just like before, you need to drag the correct descriptive word to it's corresponding drop zone based on the appearance of the monkey.",
             {
                 fontSize: "16px",
                 color: "black",
