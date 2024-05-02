@@ -293,7 +293,7 @@ export default class level3 extends Phaser.Scene {
             //sloth box
 
         //bananas
-        const dropZoneSloth: Phaser.GameObjects.Zone = this.add
+        this.add
             .zone(125, 250, 200, 300)
             .setRectangleDropZone(200, 300)
             .setInteractive();
