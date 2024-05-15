@@ -1,7 +1,7 @@
 {
-    "name": "final-project",
+    "name": "jungle-quest",
     "version": "4.0.0",
-    "description": "Phaser 3 Final Project",
+    "description": "CISC374 Final Project - Jungle Quest",
     "homepage": "https://github.com/UD-S24-CISC374/final-project-template#readme",
     "main": "index.js",
     "scripts": {
@@ -24,12 +24,12 @@
         "starter"
     ],
     "author": {
-        "name": "Austin Cory Bart",
-        "url": "https://github.com/acbart"
+        "name": "Rachel Robins",
+        "url": "https://github.com/rrachelr"
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/UD-S24-CISC374/final-project-template.git"
+        "url": "https://github.com/UD-S24-CISC374/final-project-apricot.git"
     },
     "engines": {
         "node": ">=12"
