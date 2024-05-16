@@ -36,6 +36,7 @@ export default class level3 extends Phaser.Scene {
     private elseStatement: Phaser.GameObjects.Text;
     private elseAction: Phaser.GameObjects.Text;
     private clock: Clock;
+    private complete: boolean;
     /**
      * The values of the animals in the order they appear in the animals array.
      */
@@ -111,7 +112,7 @@ export default class level3 extends Phaser.Scene {
                 else: "action('Click on the jaguar three times.')",
             },
             {
-                if: "action('Gather three coconuts.')",
+                if: "action('Click on the coconuts to gather them.')",
                 else: "action('Click on the jaguar three times.')",
             },
             {
@@ -148,7 +149,7 @@ export default class level3 extends Phaser.Scene {
         this.load.image("reset", "assets/img/reset.png");
     }
 
-    create() {
+    create(gameComplete: Record<string, boolean>) {
         this.defaultValues();
         //background + header
         this.add.image(350, 360, "background");
@@ -335,7 +336,7 @@ export default class level3 extends Phaser.Scene {
                 this.coconut1.destroy();
                 this.count += 1;
                 if (this.count == 3) {
-                    this.changeAnimal();
+                    this.changeAnimal(gameComplete);
                 }
             });
         this.coconut2 = this.add
@@ -348,7 +349,7 @@ export default class level3 extends Phaser.Scene {
                 this.coconut2.destroy();
                 this.count += 1;
                 if (this.count == 3) {
-                    this.changeAnimal();
+                    this.changeAnimal(gameComplete);
                 }
             });
         this.coconut3 = this.add
@@ -361,7 +362,7 @@ export default class level3 extends Phaser.Scene {
                 this.coconut3.destroy();
                 this.count += 1;
                 if (this.count == 3) {
-                    this.changeAnimal();
+                    this.changeAnimal(gameComplete);
                 }
             });
         this.banana1 = this.add
@@ -427,7 +428,7 @@ export default class level3 extends Phaser.Scene {
                 }
                 if (this.count == 3) {
                     this.correct.play();
-                    this.changeAnimal();
+                    this.changeAnimal(gameComplete);
                 }
             }
         );
@@ -507,7 +508,7 @@ export default class level3 extends Phaser.Scene {
      * @param old The old animal that was on the screen, will be destroyed.
      * This function changes the animal on the screen to the next animal in the list.
      */
-    changeAnimal() {
+    changeAnimal(gameComplete: Record<string, boolean>) {
         if (this.index < this.animals.length - 1) {
             this.animal.destroy();
             this.index++;
@@ -521,7 +522,6 @@ export default class level3 extends Phaser.Scene {
                 this.coconut3.setVisible(true);
             }
             else if(this.animal.texture.key == "sloth"){
-                console.log("SOTH")
                 this.animal.setInteractive();
                 this.input.setDraggable(this.animal);
             }
@@ -584,7 +584,7 @@ export default class level3 extends Phaser.Scene {
             this.p1 = this.add.text(
                 290,
                 475,
-                "The next level hasn't been implemented yet, so click NEXT to go to the title page.",
+                "Fantastic work! You've complete all the levels. Thanks for playing! Click HOME to return to the main menu.",
                 {
                     fontSize: "16px",
                     color: "black",
@@ -593,7 +593,7 @@ export default class level3 extends Phaser.Scene {
                 }
             );
             this.destroy = this.add
-                .text(575, 550, "NEXT", {
+                .text(575, 550, "HOME", {
                     fontSize: "32px",
                     color: "blue",
                     align: "center",
@@ -608,7 +608,8 @@ export default class level3 extends Phaser.Scene {
             });
             this.destroy.on("pointerup", () => {
                 this.container.destroy();
-                this.scene.stop("level3").resume("titleScene");
+                gameComplete.isComplete = true;
+                this.scene.stop("level3").resume("titleScene", gameComplete);
             });
 
             this.container = this.add.container(0, 0, [

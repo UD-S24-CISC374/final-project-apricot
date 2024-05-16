@@ -106,7 +106,7 @@ export default class level2 extends Phaser.Scene {
         this.load.audio("screech", "assets/audio/roo.wav");
     }
 
-    create(collectables: Record<string, boolean>) {
+    create(collectables: Record<string, boolean>, gameComplete: Record<string, boolean>) {
         //background + header
         this.add.image(350, 360, "background");
         console.log("Create")
@@ -347,7 +347,7 @@ export default class level2 extends Phaser.Scene {
                     this.options.map((option) => {
                         option.setColor("white");
                     });
-                    this.changeMonkey(gameObject);
+                    this.changeMonkey(gameObject, gameComplete);
                     gameObject.destroy();
 
                     graphics.clear();
@@ -533,7 +533,7 @@ export default class level2 extends Phaser.Scene {
      * @param old The old monkey that was on the screen, will be destroyed.
      * This function changes the monkey on the screen to the next monkey in the list.
      */
-    changeMonkey(old: Phaser.GameObjects.Text) {
+    changeMonkey(old: Phaser.GameObjects.Text, gameComplete: Record<string, boolean>) {
         if (this.index < this.conditions.length - 1) {
             this.monkey.destroy();
             this.isHat = !this.isHat;
@@ -635,7 +635,7 @@ export default class level2 extends Phaser.Scene {
             this.destroy.on("pointerup", () => {
                 this.clock.stop();
                 this.container.destroy();
-                this.scene.stop("level2").launch("level3");
+                this.scene.stop("level2").launch("level3", gameComplete);
             });
 
             this.container = this.add.container(0, 0, [

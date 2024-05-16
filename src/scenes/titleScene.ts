@@ -1,5 +1,8 @@
 import Phaser from "phaser";
 import Collectables from "../objects/collectables";
+import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
+import buttons from "phaser3-rex-plugins/templates/ui/buttons/Buttons";
+import SimpleDropDownList from "phaser3-rex-plugins/templates/ui/simpledropdownlist/SimpleDropDownList";
 
 export default class titleScene extends Phaser.Scene {
     private start: Phaser.GameObjects.Image;
@@ -9,10 +12,10 @@ export default class titleScene extends Phaser.Scene {
     private mute: Phaser.GameObjects.Image;
     private unmute: Phaser.GameObjects.Image;
     private music: Phaser.Sound.BaseSound;
+    private rexUI: UIPlugin;
 
     constructor() {
         super({ key: "titleScene" });
-       
     }
 
     preload() {
@@ -29,6 +32,12 @@ export default class titleScene extends Phaser.Scene {
         this.load.image("collect", "assets/img/collect.png");
         this.load.image("collect2", "assets/img/collect2.png");
         this.load.audio("music", "assets/audio/bg.mp3");
+        this.load.scenePlugin(
+            "rexuiplugin",
+            "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js",
+            "rexUI",
+            "rexUI"
+        );
     }
 
     create() {
@@ -37,12 +46,16 @@ export default class titleScene extends Phaser.Scene {
         this.music.play();
 
         //collection record
-         let collectables: Record<string, boolean> = {
-             rock: false,
-             parrot: false,
-             lizard: false,
-             roo: false,
-         };
+        let collectables: Record<string, boolean> = {
+            rock: false,
+            parrot: false,
+            lizard: false,
+            roo: false,
+        };
+
+        let gameComplete: Record<string, boolean> = {
+            isComplete: false,
+        }
 
         //start button
         this.start = this.add.image(500, 550, "start").setInteractive();
@@ -63,7 +76,7 @@ export default class titleScene extends Phaser.Scene {
             this.start2.setVisible(false);
         });
         this.start2.on("pointerup", () => {
-            this.scene.pause("titleScene").launch("level1", collectables);
+            this.scene.pause("titleScene").launch("level3", collectables);
         });
 
         //collectables
@@ -87,6 +100,73 @@ export default class titleScene extends Phaser.Scene {
         this.collect2.on("pointerup", () => {
             new Collectables(this).generateMenu(collectables);
         });
+
+        //level select
+        if(gameComplete.isComplete){
+
+        var dropDownList = this.rexUI.add.simpleDropDownList({
+            label: {
+                space: { left: 10, right: 10, top: 10, bottom: 10 },
+                background: {
+                    color: 0x00000,
+                },
+                text: {
+                    fixedWidth: 150,
+                },
+            },
+
+            button: {
+                space: { left: 10, right: 10, top: 10, bottom: 10 },
+                background: {
+                    color: 0x00000,
+                    strokeWidth: 0,
+                    "hover.strokeColor": 0xffffff,
+                    "hover.strokeWidth": 2,
+                },
+                text: {
+                    fontSize: 20,
+                },
+            },
+        });
+        dropDownList
+            .setOptions([
+                {
+                    text: "Level 1",
+                    value: "level1",
+                },
+                {
+                    text: "Level 2",
+                    value: "level2",
+                },
+                {
+                    text: "Level 3",
+                    value: "level3",
+                },
+            ])
+            .resetDisplayContent("Level Select")
+            .setPosition(200, 250)
+            .layout()
+            .on(
+                "button.click",
+                (
+                    dropDownList: SimpleDropDownList,
+                    _listPanel: buttons,
+                    _button: Phaser.GameObjects.GameObject,
+                    index: number,
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    _pointer: Phaser.Input.Pointer,
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    _event: Phaser.Types.Input.EventData
+                ) => {
+                    this.scene
+                        .pause("titleScene")
+                        .launch(
+                            dropDownList.options[index].value,
+                            collectables
+                        );
+                }
+            );
+        }
 
         //mute button
         this.mute = this.add
