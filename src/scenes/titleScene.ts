@@ -53,10 +53,6 @@ export default class titleScene extends Phaser.Scene {
             roo: false,
         };
 
-        let gameComplete: Record<string, boolean> = {
-            isComplete: false,
-        }
-
         //start button
         this.start = this.add.image(500, 550, "start").setInteractive();
         this.start2 = this.add
@@ -102,7 +98,7 @@ export default class titleScene extends Phaser.Scene {
         });
 
         //level select
-        if(gameComplete.isComplete){
+        this.events.on("resume", () => {
 
         var dropDownList = this.rexUI.add.simpleDropDownList({
             label: {
@@ -166,7 +162,7 @@ export default class titleScene extends Phaser.Scene {
                         );
                 }
             );
-        }
+        });
 
         //mute button
         this.mute = this.add
