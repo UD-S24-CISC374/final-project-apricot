@@ -23,6 +23,7 @@ export default class level1 extends Phaser.Scene {
     private clock: Clock;
     private screech: Phaser.Sound.BaseSound;
     private impact: Phaser.Sound.BaseSound;
+    private options: Array<Phaser.GameObjects.Text>;
 
     constructor() {
         super({ key: "level1" });
@@ -124,42 +125,32 @@ export default class level1 extends Phaser.Scene {
         this.add.rectangle(1000, 650, 600, 450, 0x9999);
 
         this.add.image(350, 325, "brown-pirate");
-        this.input.setDraggable(
-            this.add
-                .text(720, 500, "brown", { fontSize: "42px" })
-                .setInteractive(),
-            true
-        );
-        this.input.setDraggable(
-            this.add
-                .text(1000, 500, "blue", { fontSize: "42px" })
-                .setInteractive(),
-            true
-        );
-        this.input.setDraggable(
-            this.add
-                .text(720, 550, "pirate hat", { fontSize: "42px" })
-                .setInteractive(),
-            true
-        );
-        this.input.setDraggable(
-            this.add
-                .text(1000, 550, "yellow", { fontSize: "42px" })
-                .setInteractive(),
-            true
-        );
-        this.input.setDraggable(
-            this.add
-                .text(720, 600, "hatless", { fontSize: "42px" })
-                .setInteractive(),
-            true
-        );
-        this.input.setDraggable(
-            this.add
-                .text(1000, 600, "party hat", { fontSize: "42px" })
-                .setInteractive(),
-            true
-        );
+        let brown = this.add
+            .text(720, 500, "brown", { fontSize: "42px" })
+            .setInteractive();
+        let pirateHat = this.add
+            .text(720, 550, "pirate hat", { fontSize: "42px" })
+            .setInteractive();
+        let blue = this.add
+            .text(1000, 500, "blue", { fontSize: "42px" })
+            .setInteractive();
+        let yellow = this.add
+            .text(1000, 550, "yellow", { fontSize: "42px" })
+            .setInteractive();
+        let hatless = this.add
+            .text(720, 600, "hatless", { fontSize: "42px" })
+            .setInteractive();
+        let partyHat = this.add
+            .text(1000, 600, "party hat", { fontSize: "42px" })
+            .setInteractive();
+        this.options = [brown, pirateHat, blue, hatless, yellow, partyHat];
+        this.input.setDraggable(brown, true);
+        this.input.setDraggable(blue, true);
+        this.input.setDraggable(pirateHat, true);
+        this.input.setDraggable(yellow, true);
+        this.input.setDraggable(hatless, true);
+        this.input.setDraggable(partyHat, true);
+
 
         //default monkey
         this.monkey = this.add.image(350, 325, this.monkeys[0]);
@@ -186,7 +177,14 @@ export default class level1 extends Phaser.Scene {
             .zone(950, 270, 150, 50)
             .setRectangleDropZone(150, 50)
             .setInteractive();
-
+        const origin: Record<string, { x: number; y: number }> = {
+            brown: { x: 720, y: 500 },
+            blue: { x: 1000, y: 500 },
+            "pirate hat": { x: 720, y: 550 },
+            yellow: { x: 1000, y: 550 },
+            hatless: { x: 720, y: 600 },
+            "party hat": { x: 1000, y: 600 },
+        };
         const graphics = this.add.graphics();
         graphics.lineStyle(2, 0xffff00);
             graphics.strokeRect(
@@ -291,6 +289,11 @@ export default class level1 extends Phaser.Scene {
                         dropZone.width,
                         dropZone.height
                     );
+                }
+                else{
+                    gameObject.x = origin[gameObject.text].x;
+                    gameObject.y = origin[gameObject.text].y;
+                    gameObject.setColor("red");
                 }
             }
         );
@@ -448,6 +451,12 @@ export default class level1 extends Phaser.Scene {
         if (index < 3) {
             this.monkey.destroy();
             this.monkey = this.add.image(350, 325, this.monkeys[index]);
+            console.log(this.options);
+            this.options = this.options.slice(2);
+            this.options.forEach((option) => {
+                option.setColor("white");
+            })
+            console.log(this.options);
         } else {
             this.popup = this.add
                 .image(225, 125, "popup")
