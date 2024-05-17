@@ -1,0 +1,18 @@
+[
+    {
+        "object": "rock",
+        "facts": ["Jungles and rainforests are similar, but while rainforests have thick canopies of tall trees that block out light, jungles allow more light in, making it easier for plants to grow.", "The word ‘jungle’ comes from a Sanskrit word meaning ‘uncultivated land’.", "Jungles are home to a wide range of plants and animals. Over half of the world's species live in a jungle environment."]
+    },
+    {
+        "object": "parrot",
+        "facts": ["There are over 360 different species of parrots. Almost 100 of these are threatened with extinction, mainly due to loss of habitat.", "Parrots are “zygodactyls”, which means that they have 2 toes pointing to the front and 2 pointing to the back.", "Parrots are the only birds that can lift up food to their mouths using their feet. Other birds use their beaks to lift their food, or use their feet to grasp and carry it."]
+    },
+    {
+        "object": "lizard",
+        "facts": ["Chameleons mostly live in the rain forests and deserts of Africa. The color of their skin helps them blend in with their habitats. Chameleons that hang out in trees are usually green, while those that live in deserts are most often brown.", "Chameleons actually change their colour due to a number of different factors, including their mood, changes in light or temperature, or the humidity of their environment.", "Chameleons can move their eyes separately, with each eye having a field of 180 degrees. This means they can see 360 degrees if they need to! This is useful because it means they can see predators coming from behind them.", "Excluding their tail, some chameleons’ tongues can be twice the length of their body. Their tongues consist of both muscles and bones, and can bend round to grab their pray."]
+    },
+    {
+        "object": "roo",
+        "facts": ["There are about 12 different species of tree kangaroo. Two species are found in northeastern Australia, and the rest of the species and subspecies are found on the island of New Guinea.", "Compared to other macropods, tree kangaroos are the only ones that are able to move their hind limbs independently while walking, instead of moving them in the typical synchronous manner (together).", "Despite spending about 60% of their time sleeping, Tree Kangaroos don’t build nests for slumber. They just sleep on whatever branch they feel safe in!"]
+    }
+]
