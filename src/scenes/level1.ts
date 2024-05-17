@@ -189,22 +189,18 @@ export default class level1 extends Phaser.Scene {
 
         const graphics = this.add.graphics();
         graphics.lineStyle(2, 0xffff00);
-        if (dropZoneColor.input) {
             graphics.strokeRect(
-                dropZoneColor.x - dropZoneColor.input.hitArea.width / 2,
-                dropZoneColor.y - dropZoneColor.input.hitArea.height / 2,
-                dropZoneColor.input.hitArea.width,
-                dropZoneColor.input.hitArea.height
+                dropZoneColor.x - dropZoneColor.width / 2,
+                dropZoneColor.y - dropZoneColor.height / 2,
+                dropZoneColor.width,
+                dropZoneColor.height
             );
-        }
-        if (dropZoneHat.input) {
             graphics.strokeRect(
-                dropZoneHat.x - dropZoneHat.input.hitArea.width / 2,
-                dropZoneHat.y - dropZoneHat.input.hitArea.height / 2,
-                dropZoneHat.input.hitArea.width,
-                dropZoneHat.input.hitArea.height
+                dropZoneHat.x - dropZoneHat.width / 2,
+                dropZoneHat.y - dropZoneHat.height / 2,
+                dropZoneHat.width,
+                dropZoneHat.height
             );
-        }
 
         let flag: boolean = false;
         let temp: Phaser.GameObjects.Text | null = null;
@@ -230,16 +226,13 @@ export default class level1 extends Phaser.Scene {
                 gameObject: Phaser.GameObjects.Text,
                 dropZone: Phaser.GameObjects.Zone
             ) => {
-                graphics.clear();
                 graphics.lineStyle(2, 0x00ffff);
-                if (dropZone.input) {
-                    graphics.strokeRect(
-                        dropZone.x - dropZone.input.hitArea.width / 2,
-                        dropZone.y - dropZone.input.hitArea.height / 2,
-                        dropZone.input.hitArea.width,
-                        dropZone.input.hitArea.height
-                    );
-                }
+                graphics.strokeRect(
+                    dropZone.x - dropZone.width / 2,
+                    dropZone.y - dropZone.height / 2,
+                    dropZone.width,
+                    dropZone.height
+                );
             }
         );
 
@@ -250,16 +243,13 @@ export default class level1 extends Phaser.Scene {
                 gameObject: Phaser.GameObjects.Text,
                 dropZone: Phaser.GameObjects.Zone
             ) => {
-                graphics.clear();
                 graphics.lineStyle(2, 0xffff00);
-                if (dropZone.input) {
-                    graphics.strokeRect(
-                        dropZone.x - dropZone.input.hitArea.width / 2,
-                        dropZone.y - dropZone.input.hitArea.height / 2,
-                        dropZone.input.hitArea.width,
-                        dropZone.input.hitArea.height
-                    );
-                }
+                graphics.strokeRect(
+                    dropZone.x - dropZone.width / 2,
+                    dropZone.y - dropZone.height / 2,
+                    dropZone.width,
+                    dropZone.height
+                );
             }
         );
 
@@ -294,16 +284,13 @@ export default class level1 extends Phaser.Scene {
                             flag = false;
                         }
                     }
-                    graphics.clear();
                     graphics.lineStyle(2, 0xffff00);
-                    if (dropZone.input) {
-                        graphics.strokeRect(
-                            dropZone.x - dropZone.input.hitArea.width / 2,
-                            dropZone.y - dropZone.input.hitArea.height / 2,
-                            dropZone.input.hitArea.width,
-                            dropZone.input.hitArea.height
-                        );
-                    }
+                    graphics.strokeRect(
+                        dropZone.x - dropZone.width / 2,
+                        dropZone.y - dropZone.height / 2,
+                        dropZone.width,
+                        dropZone.height
+                    );
                 }
             }
         );
@@ -322,25 +309,19 @@ export default class level1 extends Phaser.Scene {
                     }
                 }
 
-                graphics.clear();
                 graphics.lineStyle(2, 0xffff00);
-                if (dropZoneColor.input) {
-                    graphics.strokeRect(
-                        dropZoneColor.x - dropZoneColor.input.hitArea.width / 2,
-                        dropZoneColor.y -
-                            dropZoneColor.input.hitArea.height / 2,
-                        dropZoneColor.input.hitArea.width,
-                        dropZoneColor.input.hitArea.height
-                    );
-                }
-                if (dropZoneHat.input) {
-                    graphics.strokeRect(
-                        dropZoneHat.x - dropZoneHat.input.hitArea.width / 2,
-                        dropZoneHat.y - dropZoneHat.input.hitArea.height / 2,
-                        dropZoneHat.input.hitArea.width,
-                        dropZoneHat.input.hitArea.height
-                    );
-                }
+                graphics.strokeRect(
+                    dropZoneColor.x - dropZoneColor.width / 2,
+                    dropZoneColor.y - dropZoneColor.height / 2,
+                    dropZoneColor.width,
+                    dropZoneColor.height
+                );
+                graphics.strokeRect(
+                    dropZoneHat.x - dropZoneHat.width / 2,
+                    dropZoneHat.y - dropZoneHat.height / 2,
+                    dropZoneHat.width,
+                    dropZoneHat.height
+                );
             }
         );
 
