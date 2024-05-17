@@ -465,9 +465,9 @@ export default class level3 extends Phaser.Scene {
         this.p1 = this.add.text(
             290,
             275,
-            `In this level, you will have to use the skills you learned in level 1 and 2 to solve the challenges.
+            `In this level, you will use skills from levels 1 and 2 to solve challenges. 
             
-            You will get an animal and a condition, you will have to complete the correct action to pass the level`,
+            You'll get an animal and a condition, and you need to complete the correct action to pass.`,
             {
                 fontSize: "16px",
                 color: "black",
@@ -478,8 +478,9 @@ export default class level3 extends Phaser.Scene {
         this.p2 = this.add.text(
             290,
             375,
-            `This time, we're introducing class inheritance. We do that by making a new super class with fields that other classes have in common.
-            The other classes will 'extend' the super class and add their own unique fields, but they keep the fields from the super class.`,
+            `We're introducing class inheritance: creating a superclass with common fields that other classes share.
+            
+            These other classes will extend the superclass, adding their own unique fields while keeping the common ones`,
             {
                 fontSize: "16px",
                 color: "black",
