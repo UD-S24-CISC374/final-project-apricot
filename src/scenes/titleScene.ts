@@ -75,6 +75,72 @@ export default class titleScene extends Phaser.Scene {
             this.scene.pause("titleScene").launch("level1", collectables);
         });
 
+        //level select
+        this.events.on("resume", () => {
+            var dropDownList = this.rexUI.add.simpleDropDownList({
+                label: {
+                    space: { left: 10, right: 10, top: 10, bottom: 10 },
+                    background: {
+                        color: 0x00000,
+                    },
+                    text: {
+                        fixedWidth: 150,
+                    },
+                },
+
+                button: {
+                    space: { left: 10, right: 10, top: 10, bottom: 10 },
+                    background: {
+                        color: 0x00000,
+                        strokeWidth: 0,
+                        "hover.strokeColor": 0xffffff,
+                        "hover.strokeWidth": 2,
+                    },
+                    text: {
+                        fontSize: 20,
+                    },
+                },
+            });
+            dropDownList
+                .setOptions([
+                    {
+                        text: "Level 1",
+                        value: "level1",
+                    },
+                    {
+                        text: "Level 2",
+                        value: "level2",
+                    },
+                    {
+                        text: "Level 3",
+                        value: "level3",
+                    },
+                ])
+                .resetDisplayContent("Level Select")
+                .setPosition(200, 250)
+                .layout()
+                .on(
+                    "button.click",
+                    (
+                        dropDownList: SimpleDropDownList,
+                        _listPanel: buttons,
+                        _button: Phaser.GameObjects.GameObject,
+                        index: number,
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        _pointer: Phaser.Input.Pointer,
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        _event: Phaser.Types.Input.EventData
+                    ) => {
+                        this.scene
+                            .pause("titleScene")
+                            .launch(
+                                dropDownList.options[index].value,
+                                collectables
+                            );
+                    }
+                );
+        });
+
         //collectables
         this.collect = this.add.image(800, 550, "collect").setInteractive();
         this.collect2 = this.add
@@ -95,73 +161,6 @@ export default class titleScene extends Phaser.Scene {
         });
         this.collect2.on("pointerup", () => {
             new Collectables(this).generateMenu(collectables);
-        });
-
-        //level select
-        this.events.on("resume", () => {
-
-        var dropDownList = this.rexUI.add.simpleDropDownList({
-            label: {
-                space: { left: 10, right: 10, top: 10, bottom: 10 },
-                background: {
-                    color: 0x00000,
-                },
-                text: {
-                    fixedWidth: 150,
-                },
-            },
-
-            button: {
-                space: { left: 10, right: 10, top: 10, bottom: 10 },
-                background: {
-                    color: 0x00000,
-                    strokeWidth: 0,
-                    "hover.strokeColor": 0xffffff,
-                    "hover.strokeWidth": 2,
-                },
-                text: {
-                    fontSize: 20,
-                },
-            },
-        });
-        dropDownList
-            .setOptions([
-                {
-                    text: "Level 1",
-                    value: "level1",
-                },
-                {
-                    text: "Level 2",
-                    value: "level2",
-                },
-                {
-                    text: "Level 3",
-                    value: "level3",
-                },
-            ])
-            .resetDisplayContent("Level Select")
-            .setPosition(200, 250)
-            .layout()
-            .on(
-                "button.click",
-                (
-                    dropDownList: SimpleDropDownList,
-                    _listPanel: buttons,
-                    _button: Phaser.GameObjects.GameObject,
-                    index: number,
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    _pointer: Phaser.Input.Pointer,
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    _event: Phaser.Types.Input.EventData
-                ) => {
-                    this.scene
-                        .pause("titleScene")
-                        .launch(
-                            dropDownList.options[index].value,
-                            collectables
-                        );
-                }
-            );
         });
 
         //mute button

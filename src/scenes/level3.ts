@@ -15,6 +15,8 @@ export default class level3 extends Phaser.Scene {
     private back: Phaser.GameObjects.Image;
     private correct: Phaser.Sound.BaseSound;
     private incorrect: Phaser.Sound.BaseSound;
+    private banana: Phaser.Sound.BaseSound;
+    private coconut: Phaser.Sound.BaseSound;
     private coconut1: Phaser.GameObjects.Image;
     private coconut2: Phaser.GameObjects.Image;
     private coconut3: Phaser.GameObjects.Image;
@@ -112,7 +114,7 @@ export default class level3 extends Phaser.Scene {
                 else: "action('Click on the jaguar three times.')",
             },
             {
-                if: "action('Click on the coconuts to gather them.')",
+                if: "action('Click on three coconuts.')",
                 else: "action('Click on the jaguar three times.')",
             },
             {
@@ -147,9 +149,11 @@ export default class level3 extends Phaser.Scene {
         this.load.audio("correct", "assets/audio/correct-choice.mp3");
         this.load.audio("incorrect", "assets/audio/incorrect-choice.mp3");
         this.load.image("reset", "assets/img/reset.png");
+        this.load.audio("coconut", "assets/audio/coconut.mp3")
+        this.load.audio("banana", "assets/audio/banana.mp3");
     }
 
-    create(gameComplete: Record<string, boolean>) {
+    create() {
         this.defaultValues();
         //background + header
         this.add.image(350, 360, "background");
@@ -161,6 +165,8 @@ export default class level3 extends Phaser.Scene {
 
         this.correct = this.sound.add("correct");
         this.incorrect = this.sound.add("incorrect");
+        this.coconut = this.sound.add("coconut");
+        this.banana = this.sound.add("banana");
 
         this.clock = new Clock(this, {});
         this.clock.start();
@@ -332,11 +338,11 @@ export default class level3 extends Phaser.Scene {
             .setVisible(false)
             .setInteractive()
             .on("pointerup", () => {
-                this.correct.play();
+                this.coconut.play();
                 this.coconut1.destroy();
                 this.count += 1;
                 if (this.count == 3) {
-                    this.changeAnimal(gameComplete);
+                    this.changeAnimal();
                 }
             });
         this.coconut2 = this.add
@@ -345,11 +351,11 @@ export default class level3 extends Phaser.Scene {
             .setVisible(false)
             .setInteractive()
             .on("pointerup", () => {
-                this.correct.play();
+                this.coconut.play();
                 this.coconut2.destroy();
                 this.count += 1;
                 if (this.count == 3) {
-                    this.changeAnimal(gameComplete);
+                    this.changeAnimal();
                 }
             });
         this.coconut3 = this.add
@@ -358,11 +364,12 @@ export default class level3 extends Phaser.Scene {
             .setVisible(false)
             .setInteractive()
             .on("pointerup", () => {
-                this.correct.play();
+                this.coconut.play();
                 this.coconut3.destroy();
                 this.count += 1;
                 if (this.count == 3) {
-                    this.changeAnimal(gameComplete);
+                    this.correct.play();
+                    this.changeAnimal();
                 }
             });
         this.banana1 = this.add
@@ -412,23 +419,26 @@ export default class level3 extends Phaser.Scene {
                 gameObject.x = dropZone.x;
                 gameObject.y = dropZone.y;
                 if (gameObject == this.banana1 && dropZone == dropZoneMonkey) {
+                    this.banana.play();
                     this.banana1.destroy();
                     this.count += 1;
                     console.log(this.count);
                 } 
                 else if (gameObject == this.banana2 && dropZone == dropZoneMonkey) {
+                    this.banana.play();
                     this.banana2.destroy();
                     this.count += 1;
                     console.log(this.count);
                 }
                 else if (gameObject == this.banana3 && dropZone == dropZoneMonkey){
+                    this.banana.play();
                     this.banana3.destroy();
                     this.count += 1;
                     console.log(this.count);
                 }
                 if (this.count == 3) {
                     this.correct.play();
-                    this.changeAnimal(gameComplete);
+                    this.changeAnimal();
                 }
             }
         );
@@ -508,7 +518,7 @@ export default class level3 extends Phaser.Scene {
      * @param old The old animal that was on the screen, will be destroyed.
      * This function changes the animal on the screen to the next animal in the list.
      */
-    changeAnimal(gameComplete: Record<string, boolean>) {
+    changeAnimal() {
         if (this.index < this.animals.length - 1) {
             this.animal.destroy();
             this.index++;
@@ -608,8 +618,7 @@ export default class level3 extends Phaser.Scene {
             });
             this.destroy.on("pointerup", () => {
                 this.container.destroy();
-                gameComplete.isComplete = true;
-                this.scene.stop("level3").resume("titleScene", gameComplete);
+                this.scene.stop("level3").resume("titleScene");
             });
 
             this.container = this.add.container(0, 0, [
